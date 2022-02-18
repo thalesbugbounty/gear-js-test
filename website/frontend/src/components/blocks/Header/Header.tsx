@@ -10,6 +10,7 @@ import { setIsBuildDone, AddAlert } from '../../../store/actions/actions';
 import { Logo } from './children/Logo/Logo';
 import { Menu } from './children/Menu/Menu';
 import { Sidebar } from './children/Sidebar/Sidebar';
+import { Alerts } from './children/Alerts/Alerts';
 import styles from './Header.module.scss';
 
 export const Header: VFC = () => {
@@ -73,7 +74,10 @@ export const Header: VFC = () => {
         <Logo />
         <Menu openSidebar={openSidebar} />
       </nav>
-      <Wallet />
+      <div className={styles.session}>
+        <Alerts />
+        <Wallet />
+      </div>
       {isSidebarOpen && <Sidebar closeSidebar={closeSidebar} />}
     </header>
   );
