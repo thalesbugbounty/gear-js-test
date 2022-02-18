@@ -22,7 +22,7 @@ const Alerts = () => {
         {isAnyAlert && <Counter value={unreadAmount} />}
         <img src={Bell} alt="alerts" />
       </Link>
-      <Dropdown />
+      <Dropdown className={styles.dropdown} />
     </div>
   );
 };

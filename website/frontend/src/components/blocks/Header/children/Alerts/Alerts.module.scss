@@ -1,9 +1,16 @@
 .alerts {
   margin-right: 40px;
   position: relative;
+
+  &:hover {
+    .dropdown {
+      display: block;
+    }
+  }
 }
 
 .button {
   color: inherit;
   position: relative;
+  z-index: 1;
 }
