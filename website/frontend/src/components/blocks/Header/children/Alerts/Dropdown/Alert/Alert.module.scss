@@ -1,0 +1,29 @@
+@use 'assets/scss/variables' as *;
+
+.alert {
+  padding: 10px 20px;
+  background-color: $mainBackground;
+
+  &:hover {
+    background-color: #424242;
+  }
+
+  & > *:not(:last-child) {
+    margin-bottom: 5px;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+}
+
+.body {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.footer {
+  color: $textColorSecondary;
+}
