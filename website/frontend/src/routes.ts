@@ -12,4 +12,5 @@ export const routes = {
   state: '/state/:id',
   sendMessage: '/send-message/:id',
   explorer: '/explorer',
+  alerts: '/alerts',
 };

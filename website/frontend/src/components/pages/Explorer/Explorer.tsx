@@ -17,4 +17,4 @@ const Explorer = ({ events }: EventsProps) => {
   );
 };
 
-export default Explorer;
+export { Explorer };
