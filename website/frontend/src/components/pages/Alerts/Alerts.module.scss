@@ -1,0 +1,27 @@
+@use 'assets/scss/variables' as *;
+
+.alerts {
+  max-width: 840px;
+  margin: 0 auto;
+  color: $textColor;
+}
+
+.header {
+  display: inline-block;
+  position: relative;
+}
+
+.heading {
+  margin-bottom: 35px;
+  font-size: 21px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.list {
+  $fadeSize: 100px;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 0 30px $fadeSize 0;
+  mask-image: linear-gradient(to bottom, #000 calc(100% - $fadeSize), transparent);
+}
