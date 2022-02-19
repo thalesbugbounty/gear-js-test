@@ -13,7 +13,7 @@ import { PaginationModel, UserPrograms } from 'types/common';
 import { getLocalPrograms, getLocalProgram, getLocalProgramMeta, isDevChain } from 'helpers';
 import { nodeApi } from '../../api/initApi';
 import { AlertModel, EventTypes } from '../../types/events';
-import { AlertActionTypes } from '../reducers/AlertReducer';
+import { AlertsActionTypes } from '../reducers/AlertsReducer';
 
 const fetchMessagesAction = () => ({ type: MessageActionTypes.FETCH_MESSAGES });
 
@@ -175,7 +175,7 @@ export const handleProgramSuccess = () => (dispatch: any, getState: any) => {
 };
 
 export const AddAlert = (payload: AlertModel) => ({
-  type: AlertActionTypes.ADD_ALERT,
+  type: AlertsActionTypes.ADD_ALERT,
   payload,
 });
 

@@ -3,14 +3,14 @@ import ApiReducer from './ApiReduces';
 import AccountReducer from './AccountReducer';
 import BlockReducer from './BlocksReducer';
 import ProgramReducer from './ProgramReducer';
-import AlertReducer from './AlertReducer';
+import AlertsReducer from './AlertsReducer';
 import CompilerReducer from './CompilerReducer';
 import MessageReducer from './MessageReducer';
 
 const rootReducer = combineReducers({
   programs: ProgramReducer,
   blocks: BlockReducer,
-  alert: AlertReducer,
+  alerts: AlertsReducer,
   api: ApiReducer,
   account: AccountReducer,
   compiler: CompilerReducer,

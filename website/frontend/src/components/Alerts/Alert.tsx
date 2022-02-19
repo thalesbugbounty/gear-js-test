@@ -1,18 +1,20 @@
 import React, { useEffect, FC } from 'react';
 import { useAlert } from 'react-alert';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store/reducers';
+import { getLastItem } from 'helpers';
+import { RootState } from 'store/reducers';
+import { AlertModel } from 'types/events';
 
 export const Alert: FC = () => {
-  const alert = useAlert();
-  const notification = useSelector((state: RootState) => state.alert.alert);
+  const alertApi = useAlert();
+  const alert = useSelector(({ alerts }: RootState) => getLastItem(alerts) as AlertModel);
+
   useEffect(() => {
-    if (notification) {
-      alert.show(notification.message, {
-        type: notification.type,
-      });
+    if (alert) {
+      const { message, type } = alert;
+      alertApi.show(message, { type });
     }
-  }, [alert, notification]);
+  }, [alertApi, alert]);
 
   return <></>;
 };
