@@ -1,5 +1,6 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { web3FromSource } from '@polkadot/extension-dapp';
 import { createPayloadTypeStructure, decodeHexTypes, GearKeyring, Hex, Metadata } from '@gear-js/api';
 import { Button, Input } from '@gear-js/ui';
 import { GetMetaResponse } from 'api/responses';
@@ -7,8 +8,8 @@ import { getMeta } from 'services';
 import { getPreformattedText } from 'helpers';
 import { useAccount, useApi } from 'hooks';
 import { Payload } from './children';
+import { useForm } from './useForm';
 import styles from './Form.module.scss';
-import { web3FromSource } from '@polkadot/extension-dapp';
 
 type Params = { destination: Hex };
 type MetadataResponse = { result: GetMetaResponse | undefined };
@@ -21,7 +22,7 @@ const Form = () => {
   const { destination } = useParams() as Params;
 
   const [meta, setMeta] = useState<Metadata>();
-  const [values, setValues] = useState(initValues);
+  const { values, changeValue, handleChange } = useForm(initValues);
 
   const getParsedMeta = ({ result }: MetadataResponse) =>
     result ? (JSON.parse(result.meta) as Metadata) : Promise.reject('No metadata');
@@ -36,28 +37,15 @@ const Form = () => {
     return parsedMeta;
   };
 
-  const updatePayload = (payload: string) => {
-    setValues((prevValues) => ({ ...prevValues, payload }));
-  };
-
-  const updateGasLimit = (gasLimit: string) => {
-    setValues((prevValues) => ({ ...prevValues, gasLimit }));
-  };
-
   useEffect(() => {
     getMeta(destination)
       .then(getParsedMeta)
       .then(updateMeta)
       .then(getTypeStructure)
-      .then(getPreformattedText)
-      // .then(updatePayload)
+      // .then((typeStructure) => changeValue('payload', getPreformattedText(typeStructure)))
       .catch(console.error);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setValues((prevValues) => ({ ...prevValues, [name]: value }));
-  };
 
   const calculateGas = () => {
     if (account && meta) {
@@ -67,8 +55,7 @@ const Form = () => {
 
       api.program.gasSpent
         .handle(publicKey, destination, payload, value, meta)
-        .then((gas) => gas.toString())
-        .then(updateGasLimit);
+        .then((gas) => changeValue('gasLimit', gas.toString()));
     }
   };
 
