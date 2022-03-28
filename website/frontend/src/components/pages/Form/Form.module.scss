@@ -1,10 +1,17 @@
-@use 'assets/scss/variables' as *;
-
 .input {
   display: grid;
   grid-template-columns: 165px 1fr;
 
   &:not(:last-child) {
     margin-bottom: 25px;
+  }
+}
+
+.buttons {
+  display: flex;
+  margin-left: 165px;
+
+  & > *:not(:last-child) {
+    margin-right: 25px;
   }
 }
