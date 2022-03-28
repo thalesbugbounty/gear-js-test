@@ -1,0 +1,12 @@
+@use 'assets/scss/variables' as *;
+
+.label {
+  margin-right: 16px;
+  font-size: 16px;
+  font-weight: 300;
+  color: $textColorSecondary;
+}
+
+.checkbox {
+  margin-bottom: 16px;
+}

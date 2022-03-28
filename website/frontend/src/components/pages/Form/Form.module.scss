@@ -1,0 +1,10 @@
+@use 'assets/scss/variables' as *;
+
+.input {
+  display: grid;
+  grid-template-columns: 165px 1fr;
+
+  &:not(:last-child) {
+    margin-bottom: 25px;
+  }
+}

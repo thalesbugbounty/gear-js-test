@@ -34,6 +34,7 @@ import 'assets/scss/index.scss';
 import { NODE_ADRESS_URL_PARAM, ZIndexes } from '../../consts';
 import { globalStyles } from './styles';
 import { Main } from 'layout/Main/Main';
+import { Form } from 'components/pages/Form/Form';
 
 // alert configuration
 const options = {
@@ -124,6 +125,14 @@ const AppComponent: FC = () => {
             </Route>
             <Route path={routes.editor} element={<EditorPage />} />
             <Route path={routes.mailbox} element={<Mailbox />} />
+            <Route
+              path="/form/:destination"
+              element={
+                <div className="wrapper">
+                  <Form />
+                </div>
+              }
+            />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         ) : (
