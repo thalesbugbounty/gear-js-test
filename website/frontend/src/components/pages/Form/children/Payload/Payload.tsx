@@ -1,16 +1,13 @@
-import React, { useState, ChangeEvent } from 'react';
+import React from 'react';
 import { Checkbox, Textarea, TextareaProps } from '@gear-js/ui';
+import { useInput } from '../../useForm';
 import commonStyles from '../../Form.module.scss';
 import styles from './Payload.module.scss';
 
 interface Props extends TextareaProps {}
 
 const Payload = (props: Props) => {
-  const [isManualInput, setIsManualInput] = useState(true);
-
-  const handleManualInputChange = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
-    setIsManualInput(checked);
-  };
+  const { value: isManualInput, handleChange } = useInput(false);
 
   return (
     <div className={commonStyles.input}>
@@ -21,7 +18,7 @@ const Payload = (props: Props) => {
           label="Manual input"
           className={styles.checkbox}
           checked={isManualInput}
-          onChange={handleManualInputChange}
+          onChange={handleChange}
         />
         <Textarea {...props} />
       </div>

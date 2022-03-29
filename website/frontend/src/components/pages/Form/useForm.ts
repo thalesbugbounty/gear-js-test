@@ -19,4 +19,19 @@ const useForm = <Values>(initValues: Values) => {
   return { values, changeValue, handleChange, resetValues };
 };
 
-export { useForm };
+const useInput = <Value>(initValue: Value) => {
+  const [value, setValue] = useState(initValue);
+
+  // TOFIX: any
+  const handleChange = ({ target }: ChangeEvent<any>) => {
+    setValue(target.type === 'checkbox' ? target.checked : target.value);
+  };
+
+  const resetValue = () => {
+    setValue(initValue);
+  };
+
+  return { value, handleChange, resetValue };
+};
+
+export { useForm, useInput };

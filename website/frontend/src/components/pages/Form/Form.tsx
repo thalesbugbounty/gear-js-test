@@ -1,63 +1,46 @@
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAlert } from 'react-alert';
 import { u64 } from '@polkadot/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { web3FromSource } from '@polkadot/extension-dapp';
-import { createPayloadTypeStructure, decodeHexTypes, GearKeyring, Hex, Metadata } from '@gear-js/api';
+import { GearKeyring, Hex } from '@gear-js/api';
 import { Input } from '@gear-js/ui';
-import { GetMetaResponse } from 'api/responses';
-import { getMeta } from 'services';
 import { PROGRAM_ERRORS } from 'consts';
-// import { getPreformattedText } from 'helpers';
+import { getPreformattedText } from 'helpers';
 import { useAccount, useApi, useLoading } from 'hooks';
 import { Payload, Buttons } from './children';
 import { useForm } from './useForm';
 import styles from './Form.module.scss';
+import { useMeta, useTypeStruct } from './hooks';
 
 type Params = { destination: Hex };
-type MetadataResponse = { result: GetMetaResponse | undefined };
 
-const initValues = { payload: '{ "Mint": "123" }', gasLimit: '20000000', value: '0' };
+const initValues = { payload: '', gasLimit: '20000000', value: '0' };
 
 const Form = () => {
+  const { destination } = useParams() as Params;
   const { api } = useApi();
   const { account } = useAccount();
   const { enableLoading, disableLoading } = useLoading();
   const alert = useAlert();
-  const { destination } = useParams() as Params;
-
-  const [meta, setMeta] = useState<Metadata>();
   const { values, changeValue, handleChange, resetValues } = useForm({ destination, ...initValues });
 
-  const getParsedMeta = ({ result }: MetadataResponse) =>
-    result ? (JSON.parse(result.meta) as Metadata) : Promise.reject('No metadata');
+  const meta = useMeta(destination);
+  const typeStruct = useTypeStruct(meta);
 
-  const getTypeStructure = ({ types, handle_input: handleInput }: Metadata) =>
-    types && handleInput
-      ? createPayloadTypeStructure(handleInput, decodeHexTypes(types), true)
-      : Promise.reject("Can't decode types");
-
-  const updateMeta = (parsedMeta: Metadata) => {
-    setMeta(parsedMeta);
-    return parsedMeta;
-  };
+  useEffect(() => {
+    if (typeStruct) {
+      changeValue('payload', getPreformattedText(typeStruct));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [typeStruct]);
 
   const handleError = (error: Error) => {
     console.log(error);
     alert.error(error.message);
   };
-
-  useEffect(() => {
-    getMeta(destination)
-      .then(getParsedMeta)
-      .then(updateMeta)
-      .then(getTypeStructure)
-      // .then((typeStructure) => changeValue('payload', getPreformattedText(typeStructure)))
-      .catch(handleError);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const updateGasLimit = (limit: u64) => {
     changeValue('gasLimit', limit.toString());
