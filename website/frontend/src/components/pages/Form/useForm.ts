@@ -12,7 +12,11 @@ const useForm = <Values>(initValues: Values) => {
     changeValue(name, value);
   };
 
-  return { values, changeValue, handleChange };
+  const resetValues = () => {
+    setValues(initValues);
+  };
+
+  return { values, changeValue, handleChange, resetValues };
 };
 
 export { useForm };
