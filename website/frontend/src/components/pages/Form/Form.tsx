@@ -44,13 +44,18 @@ const Form = () => {
     return parsedMeta;
   };
 
+  const handleError = (error: Error) => {
+    console.log(error);
+    alert.error(error.message);
+  };
+
   useEffect(() => {
     getMeta(destination)
       .then(getParsedMeta)
       .then(updateMeta)
       .then(getTypeStructure)
       // .then((typeStructure) => changeValue('payload', getPreformattedText(typeStructure)))
-      .catch(console.error);
+      .catch(handleError);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -65,7 +70,10 @@ const Form = () => {
       const { payload, value } = values;
       const decodedAddress = GearKeyring.decodeAddress(address);
 
-      api.program.gasSpent.handle(decodedAddress, destination, payload, value, meta).then(updateGasLimit);
+      api.program.gasSpent
+        .handle(decodedAddress, destination, payload, value, meta)
+        .then(updateGasLimit)
+        .catch(handleError);
     }
   };
 
@@ -73,6 +81,7 @@ const Form = () => {
     events.forEach(({ event: { method } }) => {
       if (method === 'DispatchMessageEnqueued') {
         alert.success('Send message: Finalized');
+        resetValues();
       } else if (method === 'ExtrinsicFailed') {
         alert.error('Extrinsic failed');
       }
@@ -83,8 +92,6 @@ const Form = () => {
     const { status, events } = result;
     const { isInBlock, isInvalid, isFinalized } = status;
 
-    enableLoading();
-
     if (isInvalid) {
       alert.error(PROGRAM_ERRORS.INVALID_TRANSACTION);
       disableLoading();
@@ -92,7 +99,6 @@ const Form = () => {
       alert.success('Send message: In block');
     } else if (isFinalized) {
       handleEventsStatus(events);
-      resetValues();
       disableLoading();
     }
   };
@@ -104,11 +110,13 @@ const Form = () => {
       const { address } = account;
       const { source } = account.meta;
 
+      enableLoading();
       api.message.submit(values, meta);
 
       web3FromSource(source)
         .then(({ signer }) => ({ signer }))
-        .then((options) => api.message.signAndSend(address, options, handleStatus));
+        .then((options) => api.message.signAndSend(address, options, handleStatus))
+        .catch(handleError);
     }
   };
 
