@@ -2,19 +2,19 @@ import React, { FormEvent, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { createPayloadTypeStructure, decodeHexTypes, GearKeyring, Hex, Metadata } from '@gear-js/api';
-import { Button, Input } from '@gear-js/ui';
+import { Input } from '@gear-js/ui';
 import { GetMetaResponse } from 'api/responses';
 import { getMeta } from 'services';
-import { getPreformattedText } from 'helpers';
+// import { getPreformattedText } from 'helpers';
 import { useAccount, useApi } from 'hooks';
-import { Payload } from './children';
+import { Payload, Buttons } from './children';
 import { useForm } from './useForm';
 import styles from './Form.module.scss';
 
 type Params = { destination: Hex };
 type MetadataResponse = { result: GetMetaResponse | undefined };
 
-const initValues = { payload: '{ "RequestForMembership": "123" }', gasLimit: '20000000', value: '0' };
+const initValues = { payload: '{ "Mint": "123" }', gasLimit: '20000000', value: '0' };
 
 const Form = () => {
   const { api } = useApi();
@@ -22,7 +22,7 @@ const Form = () => {
   const { destination } = useParams() as Params;
 
   const [meta, setMeta] = useState<Metadata>();
-  const { values, changeValue, handleChange } = useForm(initValues);
+  const { values, changeValue, handleChange } = useForm({ destination, ...initValues });
 
   const getParsedMeta = ({ result }: MetadataResponse) =>
     result ? (JSON.parse(result.meta) as Metadata) : Promise.reject('No metadata');
@@ -65,9 +65,8 @@ const Form = () => {
     if (account) {
       const { address } = account;
       const { source } = account.meta;
-      const message = { destination, ...values };
 
-      api.message.submit(message, meta);
+      api.message.submit(values, meta);
 
       web3FromSource(source)
         .then(({ signer }) => ({ signer }))
@@ -87,11 +86,7 @@ const Form = () => {
         onChange={handleChange}
       />
       <Input label="Value:" className={styles.input} name="value" value={values.value} onChange={handleChange} />
-      <div className={styles.buttons}>
-        {/* omit type='button' after gear-ui update */}
-        <Button text="Calculate gas" color="secondary" type="button" onClick={calculateGas} />
-        <Button text="Send message" type="submit" />
-      </div>
+      <Buttons calculateGas={calculateGas} />
     </form>
   );
 };
