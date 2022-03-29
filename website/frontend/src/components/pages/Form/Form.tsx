@@ -48,13 +48,13 @@ const Form = () => {
   };
 
   const calculateGas = () => {
-    if (account && meta) {
+    if (account) {
       const { address } = account;
       const { payload, value } = values;
       const decodedAddress = GearKeyring.decodeAddress(address);
 
       api.program.gasSpent
-        .handle(decodedAddress, destination, payload, value, meta)
+        .handle(decodedAddress, destination, payload, value, meta || 'String')
         .then(updateGasLimit)
         .catch(handleError);
     }
