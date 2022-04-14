@@ -1,24 +1,18 @@
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from '../../constants/styles';
+import { StoreProvider } from '../../stores';
 import { Styles } from '../../styles';
+import { Test } from '../Test/Test';
+import { Test2 } from '../Test/Test2';
 
 export const App = () => {
+  console.log('render App');
   return (
-    <ThemeProvider theme={lightTheme}>
-      <div className="App">
-        <header className="App-header">
-          <img className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-            Learn React
-          </a>
-          <a href="2343"> sfsf</a>
-          <img alt="sdafdsaf" />
-        </header>
-      </div>
-      <Styles />
-    </ThemeProvider>
+    <StoreProvider>
+      <ThemeProvider theme={lightTheme}>
+        <Test />
+        <Styles />
+      </ThemeProvider>
+    </StoreProvider>
   );
 };
