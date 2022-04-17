@@ -1,23 +1,30 @@
-import { action, computed, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { Token } from '../../stores/interfaces';
+import { generateRandomUuid, nilUuid } from '../../utils/idGenerator';
 
 export class NftToken implements Token {
-  private _value: string;
+  value: string;
 
   constructor() {
-    this._value = '';
+    this.value = nilUuid();
 
     makeObservable(this, {
-      value: computed,
-      refresh: action.bound,
+      value: observable,
+      superToken: computed,
+      setToken: action.bound,
+      refreshToken: action.bound,
     });
   }
 
-  get value(): string {
-    return this._value;
+  get superToken(): string {
+    return `${this.value}_000xxxxx000`;
   }
 
-  refresh(value: string): void {
-    this._value = value;
+  setToken(value: string): void {
+    this.value = value;
+  }
+
+  refreshToken(): void {
+    this.value = generateRandomUuid();
   }
 }

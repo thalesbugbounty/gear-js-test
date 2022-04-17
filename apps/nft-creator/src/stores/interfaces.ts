@@ -11,5 +11,7 @@ export interface Attribute {
 
 export interface Token {
   value: string;
-  refresh: (value: string) => void;
+  superToken: string;
+  refreshToken: () => void;
+  setToken: (token: string) => void;
 }
