@@ -2,21 +2,27 @@ export type Color = `#${string}`;
 
 type BackgroundColorNames = 'primary' | 'secondary';
 type StatusColorsNames = 'danger' | 'success' | 'warn';
-type TextColorsNames = 'primary' | 'secondary';
-type PaletteColorsNames = 'yellow' | 'blue' | 'green';
+type TextColorsNames = 'primary' | 'secondary' | 'inversive';
+type BrandColorsNames = 'primary' | 'yellow' | 'green';
 
 type BackgroundColors = Record<BackgroundColorNames, Color>;
 type StatusColors = Record<StatusColorsNames, Color>;
 type TextColors = Record<TextColorsNames, Color>;
-type PaletteColors = Record<PaletteColorsNames, Color>;
+type BrandColors = Record<BrandColorsNames, Color>;
 
-export interface ColorsTheme {
+export interface Palette {
   background: BackgroundColors;
   status: StatusColors;
   text: TextColors;
-  palette: PaletteColors;
+  brand: BrandColors;
 }
 
 export interface Theme {
-  colors: ColorsTheme;
+  colors: Palette;
 }
+
+export interface PropsWithTheme {
+  theme: Theme;
+}
+
+export type WithTheme<T = unknown> = T & PropsWithTheme;
