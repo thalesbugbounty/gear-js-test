@@ -1,17 +1,8 @@
 import { StoreProvider } from '../../stores';
-import styled, { ThemeProvider } from 'styled-components/macro';
+import { ThemeProvider } from 'styled-components/macro';
 import { Button } from '@gear-js/ui';
-import { lightTheme, fontWeightLight, fontWeightRegular, GlobalStyle } from '../../styles';
-
-const Test = styled.div`
-  /* font-family: Arial; */
-  ${fontWeightRegular}
-`;
-
-const Test2 = styled.div`
-  /* font-family: Arial; */
-  ${fontWeightLight}
-`;
+import { lightTheme, GlobalStyle } from '../../styles';
+import { Typography } from '../ui/Typography';
 
 export const App = () => {
   return (
@@ -26,9 +17,16 @@ export const App = () => {
             console.log('123');
           }}
         />
-        <div>123 ARPPROkfjkfd sfgkfdjgFJFGj 0038384</div>
-        <Test>123 ARPPROkfjkfd sfgkfdjgFJFGjsdfsd 0038384</Test>
-        <Test2>123 ARPPROkfjkfd sfgkfdjgFJFGjsdfsd 0038384</Test2>
+        <Typography weight="bold">Эй, жлоб! Где туз? Прячь юных съёмщиц в шкаф.</Typography>
+        <Typography size="xs" color="secondary">
+          Эй, жлоб! Где туз? Прячь юных съёмщиц в шкаф.
+        </Typography>
+        <Typography size="m" color="brand" weight="light">
+          Эй, жлоб! Где туз? Прячь юных съёмщиц в шкаф.
+        </Typography>
+        <Typography size="m" color="brand" weight="light">
+          Five big quacking zephyrs jolt my wax bed.
+        </Typography>
         <GlobalStyle />
       </ThemeProvider>
     </StoreProvider>

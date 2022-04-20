@@ -2,13 +2,13 @@ export type Color = `#${string}`;
 
 type BackgroundColorNames = 'primary' | 'secondary';
 type StatusColorsNames = 'danger' | 'success' | 'warn';
-type TextColorsNames = 'primary' | 'secondary' | 'inversive';
+type TextColorsNames = 'primary' | 'secondary' | 'inversive' | 'brand';
 type BrandColorsNames = 'primary' | 'yellow' | 'green';
 
-type BackgroundColors = Record<BackgroundColorNames, Color>;
-type StatusColors = Record<StatusColorsNames, Color>;
-type TextColors = Record<TextColorsNames, Color>;
-type BrandColors = Record<BrandColorsNames, Color>;
+export type BackgroundColors = Record<BackgroundColorNames, Color>;
+export type StatusColors = Record<StatusColorsNames, Color>;
+export type TextColors = Record<TextColorsNames, Color>;
+export type BrandColors = Record<BrandColorsNames, Color>;
 
 export interface Palette {
   background: BackgroundColors;

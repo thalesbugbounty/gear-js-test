@@ -4,10 +4,6 @@ export const RobotoFontFamily = css`
   font-family: 'Roboto', sans-serif;
 `;
 
-export const fontWeightNormal = css`
-  font-weight: normal;
-`;
-
 export const fontWeightBold = css`
   font-weight: 700;
 `;

@@ -54,6 +54,7 @@ export const lightWeb: Palette = {
     primary: colorSet.black,
     secondary: colorSet.davysGrey,
     inversive: colorSet.white,
+    brand: colorSet.softBlue,
   },
 };
 export const darkWeb: Palette = {
@@ -75,6 +76,7 @@ export const darkWeb: Palette = {
     primary: colorSet.white,
     secondary: colorSet.onyx,
     inversive: colorSet.black,
+    brand: colorSet.softBlue,
   },
 };
 
