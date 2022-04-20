@@ -25,7 +25,11 @@ export class Http {
     return this._instance.post<T, R>(url, data, config);
   }
 
-  public async patch<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
+  public async patch<T = unknown, R = AxiosResponse<T>>(
+    url: string,
+    data?: T,
+    config?: AxiosRequestConfig,
+  ): Promise<R> {
     return this._instance.patch(url, data, config);
   }
 

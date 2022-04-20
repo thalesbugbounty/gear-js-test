@@ -1,7 +1,7 @@
 import { StoreProvider } from '../../stores';
 import styled, { ThemeProvider } from 'styled-components/macro';
 import { Button } from '@gear-js/ui';
-import { lightTheme, Styles, fontWeightLight, fontWeightNormal, fontWeightRegular } from '../../styles';
+import { lightTheme, fontWeightLight, fontWeightRegular, GlobalStyle } from '../../styles';
 
 const Test = styled.div`
   /* font-family: Arial; */
@@ -23,13 +23,13 @@ export const App = () => {
           color="primary"
           icon="arrow"
           onClick={() => {
-            console.log('lol');
+            console.log('123');
           }}
         />
         <div>123 ARPPROkfjkfd sfgkfdjgFJFGj 0038384</div>
         <Test>123 ARPPROkfjkfd sfgkfdjgFJFGjsdfsd 0038384</Test>
         <Test2>123 ARPPROkfjkfd sfgkfdjgFJFGjsdfsd 0038384</Test2>
-        <Styles />
+        <GlobalStyle />
       </ThemeProvider>
     </StoreProvider>
   );

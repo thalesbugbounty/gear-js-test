@@ -1,8 +1,8 @@
 import { normalize } from 'styled-normalize';
 import { createGlobalStyle } from 'styled-components/macro';
-import { fontWeightBold, fontWeightLight, fontWeightRegular, RobotoFontFamily, baseStyles, fontFace } from './';
+import { fontWeightBold, RobotoFontFamily, baseStyles, fontFace } from '.';
 
-export const Styles = createGlobalStyle`
+export const GlobalStyle = createGlobalStyle`
   ${normalize}
   ${fontFace('Roboto', 'Roboto-Bold', 700)}
   ${fontFace('Roboto', 'Roboto-Regular', 400)}
