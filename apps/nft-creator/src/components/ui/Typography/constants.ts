@@ -50,13 +50,7 @@ export const FONT_STYLE: FontStyle = {
 };
 
 export const WEIGHT_STYLE: WeightStyle = {
-  [TYPOGRAPHY_WEIGHT.bold]: {
-    fontWeight: fontWeightBold,
-  },
-  [TYPOGRAPHY_WEIGHT.regular]: {
-    fontWeight: fontWeightRegular,
-  },
-  [TYPOGRAPHY_WEIGHT.light]: {
-    fontWeight: fontWeightLight,
-  },
+  [TYPOGRAPHY_WEIGHT.bold]: fontWeightBold,
+  [TYPOGRAPHY_WEIGHT.regular]: fontWeightRegular,
+  [TYPOGRAPHY_WEIGHT.light]: fontWeightLight,
 };

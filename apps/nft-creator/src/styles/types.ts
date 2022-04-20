@@ -1,4 +1,8 @@
-export type Color = `#${string}`;
+import { BORDER_WIDTH, BORDER_RADIUS } from './';
+
+// ____Colors
+
+type Color = `#${string}`;
 
 type BackgroundColorNames = 'primary' | 'secondary';
 type StatusColorsNames = 'danger' | 'success' | 'warn';
@@ -26,3 +30,19 @@ export interface PropsWithTheme {
 }
 
 export type WithTheme<T = unknown> = T & PropsWithTheme;
+
+// ____Borders
+
+export type BorderWidth = keyof typeof BORDER_WIDTH;
+export type BorderRadius = keyof typeof BORDER_RADIUS;
+export type BorderColor = StatusColorsNames | 'primary';
+
+export type BorderStyle<T extends string> = {
+  [K in T]: string;
+};
+
+export interface BorderBaseProps {
+  color?: BorderColor;
+  radius?: BorderRadius;
+  width?: BorderWidth;
+}

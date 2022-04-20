@@ -22,3 +22,15 @@ export const INDENT = {
   none: '0px',
   auto: 'auto',
 } as const;
+
+export const BORDER_WIDTH = {
+  s: '1px',
+  m: '2px',
+  l: '3px',
+  none: '0px',
+} as const;
+
+export const BORDER_RADIUS = {
+  standart: '15px',
+  rounded: '50%',
+} as const;

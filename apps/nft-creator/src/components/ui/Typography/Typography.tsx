@@ -2,12 +2,12 @@ import styled, { css } from 'styled-components/macro';
 import { RobotoFontFamily } from '../../../styles';
 import { TYPOGRAPHY_TAG } from './constants';
 import { TypographyProps } from './types';
-import { getFontStyle, getTextColor, getFontWeight } from './utils';
+import { getFontStyle, getFontColor, getFontWeight } from './utils';
 
 export const typographyStyle = css<TypographyProps>`
   ${RobotoFontFamily};
   ${getFontStyle};
-  ${getTextColor};
+  ${getFontColor};
   ${getFontWeight};
   margin: 0;
 `;

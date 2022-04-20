@@ -14,7 +14,7 @@ export const App = () => {
           color="primary"
           icon="arrow"
           onClick={() => {
-            console.log('123');
+            console.info('123');
           }}
         />
         <Typography weight="bold">Эй, жлоб! Где туз? Прячь юных съёмщиц в шкаф.</Typography>
@@ -24,7 +24,7 @@ export const App = () => {
         <Typography size="m" color="brand" weight="light">
           Эй, жлоб! Где туз? Прячь юных съёмщиц в шкаф.sddsfsdfdsf
         </Typography>
-        <Typography size="m" color="brand" weight="light">
+        <Typography size="m" color="success" weight="light">
           Five big quacking zephyrs jolt my wax bed.
         </Typography>
         <GlobalStyle />
