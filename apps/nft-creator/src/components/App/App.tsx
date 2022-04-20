@@ -22,7 +22,7 @@ export const App = () => {
           Эй, жлоб! Где туз? Прячь юных съёмщиц в шкаф.
         </Typography>
         <Typography size="m" color="brand" weight="light">
-          Эй, жлоб! Где туз? Прячь юных съёмщиц в шкаф.
+          Эй, жлоб! Где туз? Прячь юных съёмщиц в шкаф.sddsfsdfdsf
         </Typography>
         <Typography size="m" color="brand" weight="light">
           Five big quacking zephyrs jolt my wax bed.

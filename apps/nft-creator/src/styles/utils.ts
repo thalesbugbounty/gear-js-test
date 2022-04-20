@@ -3,7 +3,7 @@ import { Palette, Theme, WithTheme } from './';
 
 export const getPalette = (theme: Theme): Palette => theme.colors;
 
-export const baseStyles = ({ theme }: WithTheme) => {
+export const baseStyles = ({ theme }: WithTheme): FlattenSimpleInterpolation => {
   const palette = getPalette(theme);
   return css`
     background: ${palette.background.primary};
@@ -11,12 +11,17 @@ export const baseStyles = ({ theme }: WithTheme) => {
   `;
 };
 
-export const fontFace = (name: string, src: string, fontWeight: number | string): FlattenSimpleInterpolation => {
+export const fontFace = (
+  name: string,
+  woff2: string,
+  woff: string,
+  ttf: string,
+  fontWeight: number | string,
+): FlattenSimpleInterpolation => {
   return css`
     @font-face {
       font-family: ${name};
-      src: url(${'../fonts/' + src + '.woff2'}) format('woff2'), url(${'../fonts/' + src + '.woff'}) format('woff'),
-        url(${'../fonts/' + src + '.ttf'}) format('truetype');
+      src: url(${woff2}) format('woff2'), url(${woff}) format('woff'), url(${ttf}) format('truetype');
 
       font-weight: ${fontWeight};
       font-style: normal;
