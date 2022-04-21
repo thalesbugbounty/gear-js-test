@@ -23,7 +23,7 @@ const getButtonSizeStyle = (size: ButtonSize, style: SizeStyle = SIZE_STYLE): Fl
 };
 
 export const paddingOutlined = css`
-  padding: ${INDENT.xxxs} ${INDENT.xxs};
+  padding: 10px 14px;
 `;
 
 export const paddingContained = css`
@@ -61,9 +61,7 @@ export const borderDisabled = ({ theme }: WithTheme<ButtonProps>): FlattenSimple
   return getBorder({ theme, color: 'disabled', width: BORDER_WIDTH });
 };
 
-export const borderRadius = (props: WithTheme<ButtonProps>): FlattenSimpleInterpolation => {
-  return getBorderRadius(props);
-};
+export const borderRadius = (): FlattenSimpleInterpolation => getBorderRadius();
 
 export const size = ({ size = BUTTON_SIZE.medium }: WithTheme<ButtonProps>): FlattenSimpleInterpolation => {
   return css`

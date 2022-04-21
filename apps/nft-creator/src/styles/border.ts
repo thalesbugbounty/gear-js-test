@@ -54,7 +54,7 @@ export const getActiveBorder = ({
   `;
 };
 
-export const getBorderRadius = ({ radius = 'standart' }: WithTheme<BorderBaseProps>): FlattenSimpleInterpolation => {
+export const getBorderRadius = (radius: BorderRadius = 'standart'): FlattenSimpleInterpolation => {
   return css`
     border-radius: ${getBorderRadiusStyle(radius)};
   `;
