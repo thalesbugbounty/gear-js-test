@@ -12,10 +12,12 @@ import {
   textActiveColor,
   borderDisabled,
   textDisabled,
+  paddingOutlined,
 } from './utils';
 
 const ButtonComponent = styled.button<ButtonProps>`
   ${background};
+  ${paddingOutlined}
   ${size};
   ${border};
   ${borderRadius};

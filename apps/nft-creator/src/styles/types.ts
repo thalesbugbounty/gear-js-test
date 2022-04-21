@@ -57,5 +57,7 @@ export interface BorderBaseProps {
 export type TypographyColorName = TextColorName | StatusColorName;
 export type TypographyColors = Record<TypographyColorName, string>;
 
-export type TypographyButtonColorName = BorderColorName;
-export type TypographyButtonColors = Record<TypographyButtonColorName, string>;
+// ____Buttons
+
+export type ButtonColorName = BorderColorName;
+export type ButtonColors = Record<ButtonColorName, string>;
