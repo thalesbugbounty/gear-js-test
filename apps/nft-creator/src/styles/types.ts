@@ -4,21 +4,25 @@ import { BORDER_WIDTH, BORDER_RADIUS } from './';
 
 type Color = `#${string}`;
 
-type BackgroundColorNames = 'primary' | 'secondary';
-type StatusColorsNames = 'danger' | 'success' | 'warn';
-type TextColorsNames = 'primary' | 'secondary' | 'inversive' | 'brand';
-type BrandColorsNames = 'primary' | 'yellow' | 'green';
+type BackgroundColorName = 'primary' | 'secondary';
+type StatusColorName = 'danger' | 'success' | 'warn';
+type TextColorName = 'primary' | 'secondary';
+type BasicColorName = 'brand' | 'yellow' | 'green' | 'white' | 'black' | 'disabled';
 
-export type BackgroundColors = Record<BackgroundColorNames, Color>;
-export type StatusColors = Record<StatusColorsNames, Color>;
-export type TextColors = Record<TextColorsNames, Color>;
-export type BrandColors = Record<BrandColorsNames, Color>;
+export type BackgroundColors = Record<BackgroundColorName, Color>;
+export type StatusColors = Record<StatusColorName, Color>;
+export type TextColors = Record<TextColorName, Color>;
+export type BasicColors = Record<BasicColorName, Color>;
+export type HoverColors = Record<StatusColorName | TextColorName | BasicColorName, Color>;
+export type ActiveColors = Record<StatusColorName | TextColorName | BasicColorName, Color>;
 
 export interface Palette {
   background: BackgroundColors;
   status: StatusColors;
   text: TextColors;
-  brand: BrandColors;
+  basic: BasicColors;
+  hover: HoverColors;
+  active: ActiveColors;
 }
 
 export interface Theme {
@@ -35,14 +39,23 @@ export type WithTheme<T = unknown> = T & PropsWithTheme;
 
 export type BorderWidth = keyof typeof BORDER_WIDTH;
 export type BorderRadius = keyof typeof BORDER_RADIUS;
-export type BorderColor = StatusColorsNames | 'primary';
+export type BorderColorName = StatusColorName | BasicColorName;
+export type BorderColors = Record<BorderColorName, string>;
 
 export type BorderStyle<T extends string> = {
   [K in T]: string;
 };
 
 export interface BorderBaseProps {
-  color?: BorderColor;
+  color?: BorderColorName;
   radius?: BorderRadius;
   width?: BorderWidth;
 }
+
+// ____Typography
+
+export type TypographyColorName = TextColorName | StatusColorName;
+export type TypographyColors = Record<TypographyColorName, string>;
+
+export type TypographyButtonColorName = BorderColorName;
+export type TypographyButtonColors = Record<TypographyButtonColorName, string>;
