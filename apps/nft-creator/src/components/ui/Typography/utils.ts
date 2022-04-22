@@ -1,5 +1,5 @@
 import { css, FlattenSimpleInterpolation } from 'styled-components/macro';
-import { getTypographyPalette, TypographyColorName, WithTheme } from '../../../styles';
+import { getTypographyColor, WithTheme } from '../../../styles';
 import { TYPOGRAPHY_SIZE, FONT_STYLE, WEIGHT_STYLE, TYPOGRAPHY_WEIGHT } from './constants';
 import { TypographyProps, TypographySize, FontStyle, TypographyWeight, WeightStyle } from './types';
 
@@ -19,16 +19,6 @@ const getTypographyWeightStyle = (
   css`
     font-weight: ${style[weight]};
   `;
-
-const getTypographyColor = ({
-  theme,
-  color = 'primary',
-}: WithTheme<{ color?: TypographyColorName }>): FlattenSimpleInterpolation => {
-  const palette = getTypographyPalette(theme);
-  return css`
-    color: ${palette[color]};
-  `;
-};
 
 export const getFontStyle = ({ size = TYPOGRAPHY_SIZE.s }: TypographyProps): FlattenSimpleInterpolation => {
   return getTypographyFontStyle(size);

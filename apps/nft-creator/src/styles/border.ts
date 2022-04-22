@@ -59,6 +59,3 @@ export const getBorderRadius = (radius: BorderRadius = 'standart'): FlattenSimpl
     border-radius: ${getBorderRadiusStyle(radius)};
   `;
 };
-
-export const outlineNone = `outline: none;`;
-export const borderNone = `border: none;`;

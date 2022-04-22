@@ -7,8 +7,6 @@ export const BUTTON_SIZE = {
   large: 'large',
 } as const;
 
-export const background = `background: transparent;`;
-export const BORDER_NONE = `border: none;`;
 export const BORDER_WIDTH: BorderWidth = 'm';
 
 export const SIZE_STYLE: SizeStyle = {

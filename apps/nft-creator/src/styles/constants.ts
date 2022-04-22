@@ -34,3 +34,7 @@ export const BORDER_RADIUS = {
   standart: '15px',
   rounded: '50%',
 } as const;
+
+export const backgroundTransparent = `background-color: transparent`;
+export const outlineNone = `outline: none`;
+export const borderNone = `border: none`;

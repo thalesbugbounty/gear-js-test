@@ -1,6 +1,6 @@
 import { StoreProvider } from '../../stores';
 import styled, { ThemeProvider } from 'styled-components/macro';
-import { lightTheme, GlobalStyle } from '../../styles';
+import { lightTheme, GlobalStyle, darkTheme } from '../../styles';
 import { ButtonOutlined } from '../ui/Button/ButtonOutlined';
 import { ButtonContained } from '../ui/Button/ButtonContained';
 import { BoxBordered } from '../ui/Box/BoxBordered';
@@ -15,7 +15,7 @@ const Test = styled.div`
 export const App = () => {
   return (
     <StoreProvider>
-      <ThemeProvider theme={lightTheme}>
+      <ThemeProvider theme={darkTheme}>
         <ButtonOutlined
           onClick={() => {
             console.info('button click');

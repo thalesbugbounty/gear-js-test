@@ -17,5 +17,5 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   value?: string;
   color?: InputColorName;
   inputSize?: InputSize;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
 }

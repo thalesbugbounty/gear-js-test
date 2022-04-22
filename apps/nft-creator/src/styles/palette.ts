@@ -81,12 +81,12 @@ export const lightWeb: Palette = {
 
 export const darkWeb: Palette = {
   background: {
-    primary: colorSet.gainsboro,
+    primary: colorSet.onyx,
     secondary: colorSet.lightGray,
   },
   text: {
     primary: colorSet.white,
-    secondary: colorSet.onyx,
+    secondary: colorSet.davysGrey,
   },
   status,
   basic,

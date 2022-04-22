@@ -1,5 +1,5 @@
 import styled from 'styled-components/macro';
-import { BORDER_NONE } from './constants';
+import { borderNone } from '../../../styles';
 import { ButtonProps } from './types';
 import {
   size,
@@ -13,8 +13,8 @@ import {
 } from './utils';
 
 const ButtonComponent = styled.button<ButtonProps>`
-  ${BORDER_NONE};
-  ${paddingContained}
+  ${borderNone};
+  ${paddingContained};
   ${size};
   ${borderRadius};
   ${bgColor};
@@ -37,6 +37,5 @@ const ButtonComponent = styled.button<ButtonProps>`
 `;
 
 export const ButtonContained: React.FC<ButtonProps> = ({ children, ...rest }) => {
-  console.log('RenderBtn');
   return <ButtonComponent {...rest}>{children}</ButtonComponent>;
 };

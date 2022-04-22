@@ -1,5 +1,5 @@
 import styled from 'styled-components/macro';
-import { background } from './constants';
+import { backgroundTransparent } from '../../../styles';
 import { ButtonProps } from './types';
 import {
   size,
@@ -16,7 +16,7 @@ import {
 } from './utils';
 
 const ButtonComponent = styled.button<ButtonProps>`
-  ${background};
+  ${backgroundTransparent};
   ${paddingOutlined}
   ${size};
   ${border};
