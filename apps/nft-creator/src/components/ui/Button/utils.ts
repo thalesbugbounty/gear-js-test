@@ -17,8 +17,8 @@ import { ButtonProps, ButtonSize, SizeStyle } from './types';
 const getButtonSizeStyle = (size: ButtonSize, style: SizeStyle = SIZE_STYLE): FlattenSimpleInterpolation => {
   const { fontSize, lineHeight } = style[size];
   return css`
-    ${fontSize}
-    ${lineHeight}
+    font-size: ${fontSize};
+    line-height: ${lineHeight};
   `;
 };
 

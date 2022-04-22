@@ -1,14 +1,4 @@
-import {
-  fontSizeM,
-  fontSizeS,
-  fontSizeXS,
-  fontWeightBold,
-  fontWeightLight,
-  fontWeightRegular,
-  lineHeightM,
-  lineHeightS,
-  lineHeightXS,
-} from '../../../styles';
+import { FONT_SIZE, FONT_WEIGHT, LINE_HEIGHT } from '../../../styles';
 import { FontStyle, WeightStyle } from './types';
 
 export const TYPOGRAPHY_WEIGHT = {
@@ -36,21 +26,21 @@ export const TYPOGRAPHY_TAG = {
 
 export const FONT_STYLE: FontStyle = {
   [TYPOGRAPHY_SIZE.xs]: {
-    fontSize: fontSizeXS,
-    lineHeight: lineHeightXS,
+    fontSize: FONT_SIZE.xs,
+    lineHeight: LINE_HEIGHT.xs,
   },
   [TYPOGRAPHY_SIZE.s]: {
-    fontSize: fontSizeS,
-    lineHeight: lineHeightS,
+    fontSize: FONT_SIZE.s,
+    lineHeight: LINE_HEIGHT.s,
   },
   [TYPOGRAPHY_SIZE.m]: {
-    fontSize: fontSizeM,
-    lineHeight: lineHeightM,
+    fontSize: FONT_SIZE.m,
+    lineHeight: LINE_HEIGHT.m,
   },
 };
 
 export const WEIGHT_STYLE: WeightStyle = {
-  [TYPOGRAPHY_WEIGHT.bold]: fontWeightBold,
-  [TYPOGRAPHY_WEIGHT.regular]: fontWeightRegular,
-  [TYPOGRAPHY_WEIGHT.light]: fontWeightLight,
+  [TYPOGRAPHY_WEIGHT.bold]: FONT_WEIGHT.bold,
+  [TYPOGRAPHY_WEIGHT.regular]: FONT_WEIGHT.regular,
+  [TYPOGRAPHY_WEIGHT.light]: FONT_WEIGHT.light,
 };

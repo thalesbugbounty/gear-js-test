@@ -7,15 +7,18 @@ const getTypographyFontStyle = (size: TypographySize, style: FontStyle = FONT_ST
   const { fontSize, lineHeight } = style[size];
 
   return css`
-    ${fontSize};
-    ${lineHeight}
+    font-size: ${fontSize};
+    line-height: ${lineHeight};
   `;
 };
 
 const getTypographyWeightStyle = (
   weight: TypographyWeight,
   style: WeightStyle = WEIGHT_STYLE,
-): FlattenSimpleInterpolation => style[weight];
+): FlattenSimpleInterpolation =>
+  css`
+    font-weight: ${style[weight]};
+  `;
 
 const getTypographyColor = ({
   theme,

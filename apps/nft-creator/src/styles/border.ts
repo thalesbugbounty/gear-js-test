@@ -1,6 +1,5 @@
 import { css, FlattenSimpleInterpolation } from 'styled-components/macro';
 import {
-  BorderBaseProps,
   BorderColorName,
   BorderRadius,
   BorderStyle,
@@ -12,6 +11,7 @@ import {
   getHoverPalette,
   WithTheme,
 } from './';
+import { BorderProps } from './types';
 
 const getBorderWidthStyle = (width: BorderWidth, style: BorderStyle<BorderWidth> = BORDER_WIDTH): string =>
   style[width];
@@ -25,7 +25,7 @@ export const getBorder = ({
   theme,
   color = 'brand',
   width = 's',
-}: WithTheme<BorderBaseProps>): FlattenSimpleInterpolation => {
+}: WithTheme<BorderProps>): FlattenSimpleInterpolation => {
   const borderColors = getBorderPalette(theme);
   return css`
     border: ${getBorderWidthStyle(width)} solid ${getBorderColorStyle(color, borderColors)};
@@ -36,7 +36,7 @@ export const getHoverBorder = ({
   theme,
   color = 'brand',
   width = 's',
-}: WithTheme<BorderBaseProps>): FlattenSimpleInterpolation => {
+}: WithTheme<BorderProps>): FlattenSimpleInterpolation => {
   const borderColors = getHoverPalette(theme);
   return css`
     border: ${getBorderWidthStyle(width)} solid ${getBorderColorStyle(color, borderColors)};
@@ -47,7 +47,7 @@ export const getActiveBorder = ({
   theme,
   color = 'brand',
   width = 's',
-}: WithTheme<BorderBaseProps>): FlattenSimpleInterpolation => {
+}: WithTheme<BorderProps>): FlattenSimpleInterpolation => {
   const borderColors = getActivePalette(theme);
   return css`
     border: ${getBorderWidthStyle(width)} solid ${getBorderColorStyle(color, borderColors)};
@@ -59,3 +59,6 @@ export const getBorderRadius = (radius: BorderRadius = 'standart'): FlattenSimpl
     border-radius: ${getBorderRadiusStyle(radius)};
   `;
 };
+
+export const outlineNone = `outline: none;`;
+export const borderNone = `border: none;`;

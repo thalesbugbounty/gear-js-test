@@ -46,9 +46,12 @@ export type BorderStyle<T extends string> = {
   [K in T]: string;
 };
 
-export interface BorderBaseProps {
-  color?: BorderColorName;
+export interface BorderRadiusProps {
   radius?: BorderRadius;
+}
+
+export interface BorderProps {
+  color?: BorderColorName;
   width?: BorderWidth;
 }
 
@@ -61,3 +64,8 @@ export type TypographyColors = Record<TypographyColorName, string>;
 
 export type ButtonColorName = BorderColorName;
 export type ButtonColors = Record<ButtonColorName, string>;
+
+// ____Input
+
+export type InputColorName = BorderColorName;
+export type InputColors = Record<InputColorName, string>;

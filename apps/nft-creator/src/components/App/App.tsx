@@ -4,6 +4,7 @@ import { lightTheme, GlobalStyle } from '../../styles';
 import { ButtonOutlined } from '../ui/Button/ButtonOutlined';
 import { ButtonContained } from '../ui/Button/ButtonContained';
 import { BoxBordered } from '../ui/Box/BoxBordered';
+import { Input } from '../ui/Input';
 
 const Test = styled.div`
   border: 1px solid #deff22;
@@ -36,6 +37,12 @@ export const App = () => {
           <div>13123</div>
         </BoxBordered>
         <Test />
+        <Input
+          inputSize="l"
+          onChange={e => {
+            console.info(e.target.value);
+          }}
+        />
         <GlobalStyle />
       </ThemeProvider>
     </StoreProvider>

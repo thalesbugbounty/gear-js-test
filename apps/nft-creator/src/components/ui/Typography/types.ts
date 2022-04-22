@@ -1,4 +1,3 @@
-import { FlattenSimpleInterpolation } from 'styled-components/macro';
 import { TypographyColorName } from '../../../styles';
 import { TYPOGRAPHY_SIZE, TYPOGRAPHY_TAG, TYPOGRAPHY_WEIGHT } from './constants';
 
@@ -15,13 +14,13 @@ export type TypographyProps = React.HTMLAttributes<HTMLElement> & {
 
 export type FontStyle = {
   [K in TypographySize]: {
-    fontSize: FlattenSimpleInterpolation | string;
-    lineHeight: FlattenSimpleInterpolation | string;
+    fontSize: string;
+    lineHeight: string;
   };
 };
 
 export type WeightStyle = {
-  [K in TypographyWeight]: FlattenSimpleInterpolation;
+  [K in TypographyWeight]: string;
 };
 
 export type ColorStyle = {

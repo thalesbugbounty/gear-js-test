@@ -37,5 +37,6 @@ const ButtonComponent = styled.button<ButtonProps>`
 `;
 
 export const ButtonContained: React.FC<ButtonProps> = ({ children, ...rest }) => {
+  console.log('RenderBtn');
   return <ButtonComponent {...rest}>{children}</ButtonComponent>;
 };

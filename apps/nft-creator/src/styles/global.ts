@@ -1,6 +1,6 @@
 import { normalize } from 'styled-normalize';
 import { createGlobalStyle } from 'styled-components/macro';
-import { fontWeightBold, RobotoFontFamily, baseStyles } from '.';
+import { RobotoFontFamily, baseStyles } from '.';
 import { fonts } from './fonts';
 
 export const GlobalStyle = createGlobalStyle`
@@ -10,7 +10,6 @@ export const GlobalStyle = createGlobalStyle`
   body {
     ${baseStyles}
     ${RobotoFontFamily}
-    ${fontWeightBold}
   }
 
   #root {

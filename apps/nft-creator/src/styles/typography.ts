@@ -4,100 +4,38 @@ export const RobotoFontFamily = css`
   font-family: 'Roboto', sans-serif;
 `;
 
-export const fontWeightBold = css`
-  font-weight: 700;
-`;
+export const FONT_WEIGHT = {
+  bold: '700',
+  demiBold: '600',
+  semiBold: '550',
+  medium: '500',
+  regular: '400',
+  light: '300',
+} as const;
 
-export const fontWeightDemiBold = css`
-  font-weight: 600;
-`;
+export const FONT_SIZE = {
+  xxs: '11px',
+  xs: '12px',
+  s: '14px',
+  m: '16px',
+  l: '18px',
+  xl: '22px',
+  xxl: '28px',
+  xxxl: '32px',
+  xxxxl: '36px',
+  xxxxxl: '42px',
+} as const;
 
-export const fontWeightSemiBold = css`
-  font-weight: 550;
-`;
-
-export const fontWeightMedium = css`
-  font-weight: 500;
-`;
-
-export const fontWeightRegular = css`
-  font-weight: 400;
-`;
-
-export const fontWeightLight = css`
-  font-weight: 300;
-`;
-
-export const fontSizeXXS = css`
-  font-size: 11px;
-`;
-
-export const fontSizeXS = css`
-  font-size: 12px;
-`;
-
-export const fontSizeS = css`
-  font-size: 14px;
-`;
-export const fontSizeM = css`
-  font-size: 16px;
-`;
-
-export const fontSizeL = css`
-  font-size: 18px;
-`;
-
-export const fontSizeXL = css`
-  font-size: 22px;
-`;
-
-export const fontSizeXXL = css`
-  font-size: 28px;
-`;
-
-export const fontSizeXXXL = css`
-  font-size: 32px;
-`;
-
-export const fontSizeXXXXL = css`
-  font-size: 36px;
-`;
-
-export const fontSizeXXXXXL = css`
-  font-size: 42px;
-`;
-
-export const lineHeightXXS = css`
-  line-height: 16px;
-`;
-
-export const lineHeightXS = css`
-  line-height: 20px;
-`;
-
-export const lineHeightS = css`
-  line-height: 24px;
-`;
-
-export const lineHeightM = css`
-  line-height: 28px;
-`;
-
-export const lineHeightL = css`
-  line-height: 36px;
-`;
-
-export const lineHeightXL = css`
-  line-height: 40px;
-`;
-
-export const lineHeightXXL = css`
-  line-height: 48px;
-`;
-
-export const lineHeightXXXL = css`
-  line-height: 52px;
-`;
+export const LINE_HEIGHT = {
+  xxs: '16px',
+  xs: '20px',
+  s: '24px',
+  m: '28px',
+  l: '36px',
+  xl: '40px',
+  xxl: '48px',
+  xxxl: '52px',
+} as const;
 
 export const letterSpacingNormal = css`
   letter-spacing: normal;

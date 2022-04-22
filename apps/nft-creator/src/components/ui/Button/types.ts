@@ -1,5 +1,4 @@
 import { ButtonHTMLAttributes } from 'react';
-import { FlattenSimpleInterpolation } from 'styled-components';
 import { ButtonColorName } from '../../../styles';
 import { BUTTON_SIZE } from './constants';
 
@@ -12,7 +11,7 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 export type SizeStyle = {
   [K in ButtonSize]: {
-    fontSize: FlattenSimpleInterpolation;
-    lineHeight: FlattenSimpleInterpolation;
+    fontSize: string;
+    lineHeight: string;
   };
 };

@@ -1,5 +1,6 @@
 import { css, FlattenSimpleInterpolation } from 'styled-components/macro';
 import { ActiveColors, BorderColors, ButtonColors, HoverColors, Palette, Theme, TypographyColors, WithTheme } from './';
+import { FONT_SIZE, LINE_HEIGHT } from './typography';
 
 export const getPalette = (theme: Theme): Palette => theme.colors;
 
@@ -33,6 +34,8 @@ export const baseStyles = ({ theme }: WithTheme): FlattenSimpleInterpolation => 
   return css`
     background: ${palette.background.primary};
     color: ${palette.text.primary};
+    font-size: ${FONT_SIZE.m};
+    line-height: ${LINE_HEIGHT.m};
   `;
 };
 

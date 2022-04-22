@@ -1,4 +1,4 @@
-import { fontSizeS, lineHeightS, fontSizeM, lineHeightM, fontSizeL, lineHeightL, BorderWidth } from '../../../styles';
+import { BorderWidth, FONT_SIZE, LINE_HEIGHT } from '../../../styles';
 import { SizeStyle } from './types';
 
 export const BUTTON_SIZE = {
@@ -13,15 +13,15 @@ export const BORDER_WIDTH: BorderWidth = 'm';
 
 export const SIZE_STYLE: SizeStyle = {
   [BUTTON_SIZE.small]: {
-    fontSize: fontSizeS,
-    lineHeight: lineHeightS,
+    fontSize: FONT_SIZE.s,
+    lineHeight: LINE_HEIGHT.s,
   },
   [BUTTON_SIZE.medium]: {
-    fontSize: fontSizeM,
-    lineHeight: lineHeightM,
+    fontSize: FONT_SIZE.m,
+    lineHeight: LINE_HEIGHT.m,
   },
   [BUTTON_SIZE.large]: {
-    fontSize: fontSizeL,
-    lineHeight: lineHeightL,
+    fontSize: FONT_SIZE.l,
+    lineHeight: LINE_HEIGHT.l,
   },
 };
