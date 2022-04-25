@@ -24,7 +24,7 @@ const getBorderColorStyle = (color: BorderColorName, style: BorderStyle<BorderCo
 export const getBorder = ({
   theme,
   color = 'brand',
-  width = 's',
+  width = 'm',
 }: WithTheme<BorderProps>): FlattenSimpleInterpolation => {
   const borderColors = getBorderPalette(theme);
   return css`

@@ -17,7 +17,7 @@ const size = ({ inputSize = 'm' }: WithTheme<InputProps>): FlattenSimpleInterpol
 
 const border = ({ theme, color }: WithTheme<InputProps>): FlattenSimpleInterpolation => {
   return css`
-    ${getBorder({ theme, width: 'm', color })};
+    ${getBorder({ theme, color })};
   `;
 };
 
@@ -28,7 +28,7 @@ const focusBorder = ({ theme, color }: WithTheme<InputProps>): FlattenSimpleInte
 export const getCommonStyles = (props: WithTheme<InputProps>): FlattenSimpleInterpolation => {
   return css`
     ${border(props)};
-    ${getBorderRadius('standart')}
+    ${getBorderRadius()}
     ${size(props)};
     ${outlineNone};
 

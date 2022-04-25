@@ -5,6 +5,8 @@ import { ButtonOutlined } from '../ui/Button/ButtonOutlined';
 import { ButtonContained } from '../ui/Button/ButtonContained';
 import { BoxBordered } from '../ui/Box/BoxBordered';
 import { Input } from '../ui/Input';
+import { useEffect } from 'react';
+import { fetchWasm } from '../../api/contract';
 
 const Test = styled.div`
   border: 1px solid #deff22;
@@ -13,6 +15,10 @@ const Test = styled.div`
 `;
 
 export const App = () => {
+  useEffect(() => {
+    fetchWasm();
+  }, []);
+
   return (
     <StoreProvider>
       <ThemeProvider theme={darkTheme}>
