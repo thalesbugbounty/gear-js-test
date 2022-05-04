@@ -7,6 +7,7 @@ import { BoxBordered } from '../ui/Box/BoxBordered';
 import { Input } from '../ui/Input';
 import { useEffect } from 'react';
 import { fetchWasm } from '../../api/contract';
+import { GearApi } from '@gear-js/api';
 
 const Test = styled.div`
   border: 1px solid #deff22;
@@ -16,7 +17,12 @@ const Test = styled.div`
 
 export const App = () => {
   useEffect(() => {
-    fetchWasm();
+    const providerAddress = process.env.REACT_APP_NODE_ADDRESS;
+    console.log('providerAddress: ', providerAddress);
+    GearApi.create({ providerAddress: 'wss://rpc-node.gear-tech.io:443' }).then(api => {
+      console.log('API: ', api);
+      fetchWasm();
+    });
   }, []);
 
   return (
