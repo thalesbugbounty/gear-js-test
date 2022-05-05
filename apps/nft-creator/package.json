@@ -22,6 +22,7 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-raster": "^8.2.1",
+    "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "styled-components": "^5.3.5",
     "styled-normalize": "^8.0.7",
@@ -31,7 +32,7 @@
     "ws": "^8.5.0"
   },
   "scripts": {
-    "start": "REACT_APP_BASE_API_URL=\"https://ya.ru\" REACT_APP_NODE_ADDRESS=\"wss://rpc-node.gear-tech.io:443\" craco start",
+    "start": "REACT_APP_BASE_API_URL=\"https://gear-tech.io\" REACT_APP_NODE_ADDRESS=\"wss://rpc-node.gear-tech.io:443\" craco start",
     "build": "craco build",
     "test": "craco test",
     "eject": "craco eject"

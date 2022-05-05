@@ -1,10 +1,12 @@
 import { action, makeObservable, observable } from 'mobx';
+import { Store } from '..';
 import { NftAttribute } from '../../core/Nft/NftAttribute';
 import { NftToken } from '../../core/Nft/NftToken';
+import { BaseStore } from '../BaseStore';
 import { Rarity } from '../constants';
 import { Attribute, Token } from '../interfaces';
 
-export class NftStore {
+export class NftStore extends BaseStore {
   name: string;
 
   description: string;
@@ -17,7 +19,9 @@ export class NftStore {
 
   token: Token;
 
-  constructor() {
+  constructor(rootStore: Store) {
+    super(rootStore);
+
     this.name = '';
     this.description = '';
     this.rarity = Rarity.Common;

@@ -29,20 +29,16 @@ const status: StatusColors = {
 
 const basic: BasicColors = {
   black: colorSet.black,
-  brand: colorSet.blue,
+  brand: colorSet.jungleGreen,
   disabled: colorSet.cadetBlueCrayola,
-  green: colorSet.jungleGreen,
   white: colorSet.white,
-  yellow: colorSet.maizeCrayola,
 };
 
 const hover: HoverColors = {
   black: colorSet.black,
   brand: colorSet.blue700,
   disabled: colorSet.cadetBlueCrayola,
-  green: colorSet.jungleGreen,
   white: colorSet.white,
-  yellow: colorSet.maizeCrayola,
   danger: colorSet.redSalsa,
   success: colorSet.pistachio,
   warn: colorSet.orange,
@@ -54,9 +50,7 @@ const active: ActiveColors = {
   black: colorSet.black,
   brand: colorSet.blue300,
   disabled: colorSet.cadetBlueCrayola,
-  green: colorSet.jungleGreen,
   white: colorSet.white,
-  yellow: colorSet.maizeCrayola,
   danger: colorSet.redSalsa,
   success: colorSet.pistachio,
   warn: colorSet.orange,

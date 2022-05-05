@@ -7,7 +7,7 @@ type Color = `#${string}`;
 type BackgroundColorName = 'primary' | 'secondary';
 type StatusColorName = 'danger' | 'success' | 'warn';
 type TextColorName = 'primary' | 'secondary';
-type BasicColorName = 'brand' | 'yellow' | 'green' | 'white' | 'black' | 'disabled';
+type BasicColorName = 'brand' | 'white' | 'black' | 'disabled';
 
 export type BackgroundColors = Record<BackgroundColorName, Color>;
 export type StatusColors = Record<StatusColorName, Color>;
