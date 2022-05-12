@@ -7,7 +7,7 @@ export const colorSet = {
   redSalsa: '#f94144',
   maizeCrayola: '#f9c74f',
   pistachio: '#90be6d',
-  jungleGreen: '#43aa8b',
+  jungleGreen: '#2BD071',
   cultured: '#f8f9fa',
   white: '#ffffff',
   black: '#000000',
@@ -16,9 +16,12 @@ export const colorSet = {
   blue: '#5361e7',
   blue300: '#808aed',
   blue700: '#2638e1',
-  davysGrey: '#495057',
-  onyx: '#343a40',
+  davysGrey: '#858585',
+  onyx: '#282828',
   cadetBlueCrayola: '#adb5bd',
+  grey: '#3d3d3d',
+  grey300: '#3d3d3d',
+  grey700: '#2c2c2c',
 } as const;
 
 const status: StatusColors = {
@@ -32,6 +35,7 @@ const basic: BasicColors = {
   brand: colorSet.jungleGreen,
   disabled: colorSet.cadetBlueCrayola,
   white: colorSet.white,
+  dark: colorSet.grey,
 };
 
 const hover: HoverColors = {
@@ -44,6 +48,7 @@ const hover: HoverColors = {
   warn: colorSet.orange,
   primary: colorSet.black,
   secondary: colorSet.davysGrey,
+  dark: colorSet.grey700,
 };
 
 const active: ActiveColors = {
@@ -56,6 +61,7 @@ const active: ActiveColors = {
   warn: colorSet.orange,
   primary: colorSet.black,
   secondary: colorSet.davysGrey,
+  dark: colorSet.grey300,
 };
 
 export const lightWeb: Palette = {

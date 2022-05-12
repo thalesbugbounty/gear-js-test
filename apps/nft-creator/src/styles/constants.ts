@@ -22,7 +22,7 @@ export const BORDER_WIDTH = {
 } as const;
 
 export const BORDER_RADIUS = {
-  standart: '15px',
+  standart: '2px',
   rounded: '50%',
   none: '0px',
 } as const;

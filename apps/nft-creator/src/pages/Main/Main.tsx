@@ -5,7 +5,7 @@ import { Typography } from '../../components/ui/Typography';
 import { useAccountStore } from '../../stores';
 
 export const Main = observer(() => {
-  const { accounts, updateAddress } = useAccountStore();
+  const { accounts, updateAccount } = useAccountStore();
 
   return (
     <BoxBordered borderColor="success" borderRadius="none">
@@ -20,7 +20,7 @@ export const Main = observer(() => {
           <Button
             text="Select"
             onClick={() => {
-              updateAddress(acc.address);
+              updateAccount(acc);
             }}
           />
         </div>

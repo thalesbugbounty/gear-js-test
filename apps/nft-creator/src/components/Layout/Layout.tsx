@@ -10,10 +10,10 @@ export const Layout: React.FC<React.PropsWithChildren<Props>> = ({ children, isC
   return (
     <Box
       colspan={12}
-      rowGap={INDENT.xxxs}
+      // rowGap={INDENT.xxxs}
       columnGap={INDENT.xs}
       control={isControl}
-      width={['100px', '1000px']}
+      width={['100px', '1200px']}
       margin="auto"
     >
       <Header />

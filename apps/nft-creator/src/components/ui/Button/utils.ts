@@ -23,11 +23,11 @@ const getButtonSizeStyle = (size: ButtonSize, style: SizeStyle = SIZE_STYLE): Fl
 };
 
 export const paddingOutlined = css`
-  padding: 10px 14px;
+  padding: 10px 22px;
 `;
 
 export const paddingContained = css`
-  padding: ${INDENT.xxs} ${INDENT.xs};
+  padding: ${INDENT.xxs} ${INDENT.sm};
 `;
 
 const getButtonColor = ({ theme, color = 'brand' }: WithTheme<ButtonProps>): string => {

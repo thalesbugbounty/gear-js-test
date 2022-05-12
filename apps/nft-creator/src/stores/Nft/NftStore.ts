@@ -11,7 +11,7 @@ export class NftStore extends BaseStore {
 
   description: string;
 
-  rarity: Rarity;
+  rarity: keyof typeof Rarity;
 
   attributes: Attribute[];
 

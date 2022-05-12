@@ -6,38 +6,34 @@ import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { GearKeyring, Hex } from '@gear-js/api';
 
 export class AccountStore extends BaseStore {
-  public accounts: InjectedAccountWithMeta[];
+  public accounts: InjectedAccountWithMeta[] = [];
 
-  public currentAccountAddress: string | null;
+  public currentAccount: InjectedAccountWithMeta | null = null;
 
-  public isInjectedExtensions: boolean;
+  public isInjectedExtensions = false;
 
   constructor(rootStore: Store) {
     super(rootStore);
 
-    this.accounts = [];
-    this.currentAccountAddress = this.store.localStorage.account.getData();
-    this.isInjectedExtensions = false;
     this.checkAccounts = this.checkAccounts.bind(this);
+    this.findLoggedAccount = this.findLoggedAccount.bind(this);
 
     makeObservable(this, {
       accounts: observable,
-      currentAccountAddress: observable,
+      currentAccount: observable,
       isInjectedExtensions: observable,
-      updateAddress: action.bound,
+      updateAccount: action.bound,
       accountId: computed,
     });
-
-    this.checkAccounts();
   }
 
   get accountId(): Hex | null {
-    return !!this.currentAccountAddress ? GearKeyring.decodeAddress(this.currentAccountAddress) : null;
+    return !!this.currentAccount ? GearKeyring.decodeAddress(this.currentAccount.address) : null;
   }
 
-  public updateAddress(address: string) {
-    this.currentAccountAddress = address;
-    this.store.localStorage.account.autoSave(address);
+  public updateAccount(account: InjectedAccountWithMeta) {
+    this.currentAccount = account;
+    this.store.localStorage.account.autoSave(account.address);
   }
 
   public async checkAccounts() {
@@ -54,5 +50,21 @@ export class AccountStore extends BaseStore {
     runInAction(() => {
       this.accounts = accounts;
     });
+
+    this.findLoggedAccount();
+  }
+
+  public findLoggedAccount() {
+    const loggedAddress = this.store.localStorage.account.getData();
+
+    if (!loggedAddress || !!this.currentAccount) {
+      return;
+    }
+
+    const loggedAccount = this.accounts.find(({ address }) => address === loggedAddress);
+
+    if (!!loggedAccount) {
+      this.updateAccount(loggedAccount);
+    }
   }
 }

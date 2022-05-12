@@ -1,16 +1,17 @@
-import { GearApi, getWasmMetadata, Hex, Metadata, GearKeyring } from '@gear-js/api';
-import { action, computed, makeObservable, observable, runInAction, toJS } from 'mobx';
+import { GearApi, getWasmMetadata, Metadata } from '@gear-js/api';
+import { computed, makeObservable, observable, runInAction } from 'mobx';
 import { Store } from '..';
 import { BaseStore } from '../BaseStore';
 import metaWasm from '../../assets/nft.meta.wasm';
 import optWasm from '../../assets/nft.opt.wasm';
+import { NODE_ADDRESS, PROGRAMM_ID } from '../../utils/vars';
 
 export class ApiStore extends BaseStore {
   public api: GearApi | undefined;
 
   public meta: Metadata | undefined;
 
-  public code: Hex | Buffer | undefined;
+  public code: Buffer | undefined;
 
   constructor(rootStore: Store) {
     super(rootStore);
@@ -25,16 +26,11 @@ export class ApiStore extends BaseStore {
       code: observable,
       isApiReady: computed,
     });
-
-    this.initApi();
-    this.fetchMetaWasm();
-    this.fetchOptWasm();
-    this.calculateGas();
   }
 
   public async initApi(): Promise<void> {
     try {
-      const api = await GearApi.create({ providerAddress: process.env.REACT_APP_NODE_ADDRESS });
+      const api = await GearApi.create({ providerAddress: NODE_ADDRESS });
       runInAction(() => {
         this.api = api;
       });
@@ -76,14 +72,14 @@ export class ApiStore extends BaseStore {
   // }
 
   public async calculateGas() {
-    if (!this.store.account.accountId) {
+    if (!this.store.account.accountId || !PROGRAMM_ID) {
       return;
     }
 
     try {
       const gas = await this.api?.program.gasSpent.handle(
-        GearKeyring.decodeAddress(this.store.account.accountId),
-        '0xa3dc271139e4a3b76fca9d1bc30ebea6a9bb53bcfe559f432f17a489dabd9f0f',
+        this.store.account.accountId,
+        PROGRAMM_ID,
         {
           Mint: {
             tokenMetadata: {
@@ -97,8 +93,6 @@ export class ApiStore extends BaseStore {
         0,
         this.meta,
       );
-
-      console.log(gas?.toHuman(), 'GAS');
     } catch (error) {
       throw new Error(`${error}`);
     }
