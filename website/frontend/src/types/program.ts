@@ -1,4 +1,4 @@
-import { PayloadType } from '@gear-js/api';
+import { Metadata, PayloadType } from '@gear-js/api';
 import { AnyNumber } from '@polkadot/types/types';
 
 export enum ProgramStatus {
@@ -12,6 +12,7 @@ export interface ProgramModel {
   blockHash?: string;
   programNumber?: number;
   name?: string;
+  owner: string;
   callCount?: number;
   timestamp: string;
   initStatus: ProgramStatus;
@@ -24,26 +25,12 @@ export interface ProgramPaginationModel {
   programs: ProgramModel[];
 }
 
-export interface MetaModel {
-  init_input: string;
-  init_output: string;
-  handle_input: string;
-  handle_output: string;
-  title: string;
-  types: string;
-  name?: string;
-}
-
 export interface UploadProgramModel {
   initPayload: string;
   gasLimit: number;
   value: number;
-  init_input: string;
-  init_output: string;
-  handle_input: string;
-  handle_output: string;
+  meta: Metadata;
   id?: string;
-  types: string;
   title?: string;
   programName?: string;
 }
