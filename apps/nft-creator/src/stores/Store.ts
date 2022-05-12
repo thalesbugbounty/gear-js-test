@@ -30,6 +30,8 @@ autorun(() => {
   store.api.fetchOptWasm();
 
   store.account.checkAccounts();
+
+  // store.api.readStateOfProgramm();
 });
 
 export default store;

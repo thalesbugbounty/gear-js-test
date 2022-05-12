@@ -1,17 +1,20 @@
-import { GearApi, getWasmMetadata, Metadata } from '@gear-js/api';
+import { GearApi, getWasmMetadata, Metadata, decodeHexTypes, createPayloadTypeStructure } from '@gear-js/api';
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 import { Store } from '..';
 import { BaseStore } from '../BaseStore';
 import metaWasm from '../../assets/nft.meta.wasm';
 import optWasm from '../../assets/nft.opt.wasm';
 import { NODE_ADDRESS, PROGRAMM_ID } from '../../utils/vars';
+import { getBuffer } from './utils';
 
 export class ApiStore extends BaseStore {
   public api: GearApi | undefined;
 
   public meta: Metadata | undefined;
 
-  public code: Buffer | undefined;
+  public programmBuffer: Buffer | undefined;
+
+  public metaBuffer: Buffer | undefined;
 
   constructor(rootStore: Store) {
     super(rootStore);
@@ -19,12 +22,16 @@ export class ApiStore extends BaseStore {
     this.fetchMetaWasm = this.fetchMetaWasm.bind(this);
     this.fetchOptWasm = this.fetchOptWasm.bind(this);
     this.calculateGas = this.calculateGas.bind(this);
+    this.readStateOfProgramm = this.readStateOfProgramm.bind(this);
 
     makeObservable(this, {
       api: observable,
       meta: observable,
-      code: observable,
+      programmBuffer: observable,
+      metaBuffer: observable,
       isApiReady: computed,
+      stateInput: computed,
+      types: computed,
     });
   }
 
@@ -41,11 +48,11 @@ export class ApiStore extends BaseStore {
 
   public async fetchMetaWasm() {
     try {
-      const wasm = await fetch(metaWasm);
-      const buffer = await wasm.arrayBuffer();
-      const meta = await getWasmMetadata(Buffer.from(buffer));
+      const metaBuffer = await getBuffer(metaWasm);
+      const meta = await getWasmMetadata(metaBuffer);
 
       runInAction(() => {
+        this.metaBuffer = metaBuffer;
         this.meta = meta;
       });
     } catch (error) {
@@ -55,12 +62,10 @@ export class ApiStore extends BaseStore {
 
   public async fetchOptWasm() {
     try {
-      const wasm = await fetch(optWasm);
-      const buffer = await wasm.arrayBuffer();
-      const code = Buffer.from(buffer);
+      const programmBuffer = await getBuffer(optWasm);
 
       runInAction(() => {
-        this.code = code;
+        this.programmBuffer = programmBuffer;
       });
     } catch (error) {
       throw new Error(`${error}`);
@@ -96,6 +101,38 @@ export class ApiStore extends BaseStore {
     } catch (error) {
       throw new Error(`${error}`);
     }
+  }
+
+  public async readStateOfProgramm() {
+    if (!this.store.account.accountId || !PROGRAMM_ID || !this.metaBuffer) {
+      return;
+    }
+
+    if (!!this.stateInput && !!this.types) {
+      const decodedTypes = decodeHexTypes(this.types);
+      const typeStruct = createPayloadTypeStructure(this.stateInput, decodedTypes, true);
+      // console.log('read', decodedTypes, typeStruct);
+      const state = await this.api?.programState.read(
+        PROGRAMM_ID,
+        this.metaBuffer,
+        JSON.stringify(
+          {
+            NFTInfo: 'Null',
+          },
+          null,
+          4,
+        ),
+      );
+      console.log(state, 'STATE');
+    }
+  }
+
+  public get stateInput() {
+    return this.meta?.meta_state_input;
+  }
+
+  public get types() {
+    return this.meta?.types;
   }
 
   public get isApiReady(): boolean {
