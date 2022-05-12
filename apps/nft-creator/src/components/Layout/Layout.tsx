@@ -1,3 +1,4 @@
+import { Outlet } from 'react-router-dom';
 import { INDENT } from '../../styles';
 import { Header } from '../Header';
 import { Box } from '../ui/Box';
@@ -6,7 +7,7 @@ interface Props {
   isControl?: boolean;
 }
 
-export const Layout: React.FC<React.PropsWithChildren<Props>> = ({ children, isControl }) => {
+export const Layout: React.FC<React.PropsWithChildren<Props>> = ({ isControl }) => {
   return (
     <Box
       colspan={12}
@@ -17,7 +18,9 @@ export const Layout: React.FC<React.PropsWithChildren<Props>> = ({ children, isC
       margin="auto"
     >
       <Header />
-      <Box tag="main">{children}</Box>
+      <Box tag="main">
+        <Outlet />
+      </Box>
     </Box>
   );
 };

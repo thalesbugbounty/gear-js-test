@@ -1,4 +1,3 @@
-import { Button } from '@gear-js/ui';
 import styled from 'styled-components/macro';
 import { INDENT } from '../../styles';
 import { Box } from '../ui/Box';
@@ -15,6 +14,6 @@ export const Actions = styled.div`
   flex-wrap: nowrap;
 `;
 
-export const CollectionButton = styled(Button)`
+export const CollectionButton = styled.div`
   margin-right: ${INDENT.m};
 `;
