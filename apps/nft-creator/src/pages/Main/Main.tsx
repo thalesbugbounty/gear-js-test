@@ -1,14 +1,13 @@
 import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
-import { useAccountStore, useApiStore } from '../../stores';
+import { useApiStore } from '../../stores';
 
 export const Main = observer(() => {
-  const { readStateOfProgramm, metaBuffer } = useApiStore();
-  const { accountId } = useAccountStore();
+  const { readStateOfProgram, isApiReady } = useApiStore();
   useEffect(() => {
-    if (!!accountId && !!metaBuffer) {
-      readStateOfProgramm();
+    if (isApiReady) {
+      readStateOfProgram();
     }
-  }, [accountId, metaBuffer, readStateOfProgramm]);
+  }, [isApiReady, readStateOfProgram]);
   return <>Main</>;
 });

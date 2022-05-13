@@ -1,6 +1,7 @@
 import styled from 'styled-components/macro';
 import { INDENT } from '../../styles';
 import { Box } from '../ui/Box';
+import { CollectionButton as Button } from './components/CollectionButton';
 
 export const Wrapper = styled(Box)`
   display: flex;
@@ -14,6 +15,6 @@ export const Actions = styled.div`
   flex-wrap: nowrap;
 `;
 
-export const CollectionButton = styled.div`
+export const CollectionButton = styled(Button)`
   margin-right: ${INDENT.m};
 `;

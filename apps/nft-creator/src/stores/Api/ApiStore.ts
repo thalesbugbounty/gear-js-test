@@ -1,4 +1,4 @@
-import { GearApi, getWasmMetadata, Metadata, decodeHexTypes, createPayloadTypeStructure } from '@gear-js/api';
+import { GearApi, getWasmMetadata, Metadata } from '@gear-js/api';
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 import { Store } from '..';
 import { BaseStore } from '../BaseStore';
@@ -6,6 +6,7 @@ import metaWasm from '../../assets/nft.meta.wasm';
 import optWasm from '../../assets/nft.opt.wasm';
 import { NODE_ADDRESS, PROGRAMM_ID } from '../../utils/vars';
 import { getBuffer } from './utils';
+import { StateOfProgram } from '../types';
 
 export class ApiStore extends BaseStore {
   public api: GearApi | undefined;
@@ -22,7 +23,7 @@ export class ApiStore extends BaseStore {
     this.fetchMetaWasm = this.fetchMetaWasm.bind(this);
     this.fetchOptWasm = this.fetchOptWasm.bind(this);
     this.calculateGas = this.calculateGas.bind(this);
-    this.readStateOfProgramm = this.readStateOfProgramm.bind(this);
+    this.readStateOfProgram = this.readStateOfProgram.bind(this);
 
     makeObservable(this, {
       api: observable,
@@ -30,8 +31,6 @@ export class ApiStore extends BaseStore {
       programmBuffer: observable,
       metaBuffer: observable,
       isApiReady: computed,
-      stateInput: computed,
-      types: computed,
     });
   }
 
@@ -103,36 +102,17 @@ export class ApiStore extends BaseStore {
     }
   }
 
-  public async readStateOfProgramm() {
-    if (!this.store.account.accountId || !PROGRAMM_ID || !this.metaBuffer) {
+  public async readStateOfProgram() {
+    if (!this.store.account.accountId || !PROGRAMM_ID || !this.metaBuffer || !this.api) {
       return;
     }
 
-    if (!!this.stateInput && !!this.types) {
-      const decodedTypes = decodeHexTypes(this.types);
-      const typeStruct = createPayloadTypeStructure(this.stateInput, decodedTypes, true);
-      // console.log('read', decodedTypes, typeStruct);
-      const state = await this.api?.programState.read(
-        PROGRAMM_ID,
-        this.metaBuffer,
-        JSON.stringify(
-          {
-            NFTInfo: 'Null',
-          },
-          null,
-          4,
-        ),
-      );
-      console.log(state, 'STATE');
+    try {
+      const state = await this.api.programState.read(PROGRAMM_ID, this.metaBuffer, { AllTokens: null });
+      return state.toHuman() as unknown as StateOfProgram;
+    } catch (error) {
+      throw new Error(`${error}`);
     }
-  }
-
-  public get stateInput() {
-    return this.meta?.meta_state_input;
-  }
-
-  public get types() {
-    return this.meta?.types;
   }
 
   public get isApiReady(): boolean {

@@ -32,7 +32,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "REACT_APP_BASE_API_URL=\"https://gear-tech.io\" REACT_APP_NODE_ADDRESS=\"wss://rpc-node.gear-tech.io:443\" REACT_APP_PROGRAMM_ID=\"0xa3dc271139e4a3b76fca9d1bc30ebea6a9bb53bcfe559f432f17a489dabd9f0f\" craco start",
+    "start": "REACT_APP_BASE_API_URL=\"https://gear-tech.io\" REACT_APP_NODE_ADDRESS=\"wss://node-workshop.gear.rs:443\" REACT_APP_PROGRAMM_ID=\"0x8bc3fc4d0842df449c3e420ee985c40e987623bdc26c17c97f750859ff83233d\" craco start",
     "build": "craco build",
     "test": "craco test",
     "eject": "craco eject"
