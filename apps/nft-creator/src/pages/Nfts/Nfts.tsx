@@ -1,13 +1,24 @@
 import { Outlet } from 'react-router-dom';
 import { NftNav } from '../../components/NftNav';
-import { BoxBordered } from '../../components/ui/Box';
+import { Box } from '../../components/ui/Box';
+import { useEffect } from 'react';
+import { useApiStore, useNftStore } from '../../stores';
+import { observer } from 'mobx-react-lite';
 
-export const Nfts = () => {
+export const Nfts = observer(() => {
+  const { isApiReady } = useApiStore();
+  const { loadProgramState } = useNftStore();
+  useEffect(() => {
+    if (isApiReady) {
+      loadProgramState();
+    }
+  }, [isApiReady, loadProgramState]);
+
   return (
-    <BoxBordered borderColor="success" borderRadius="none">
+    <Box>
       Nfts
       <NftNav />
       <Outlet />
-    </BoxBordered>
+    </Box>
   );
-};
+});

@@ -5,6 +5,7 @@ import { Nfts } from './Nfts';
 import { Main } from './Main';
 import { NotFound } from './NotFound';
 import { NftPages } from './constants';
+import { MyNfts } from './Nfts/components/MyNfts';
 
 export default () => {
   return (
@@ -13,7 +14,7 @@ export default () => {
         <Route index element={<Main />} />
         <Route path="nfts" element={<Nfts />}>
           <Route path=":id" element={<Nft />} />
-          <Route path={NftPages.my} element={<Nft />} />
+          <Route path={NftPages.my} element={<MyNfts />} />
           <Route path={NftPages.approved} element={<Nft />} />
           <Route path={NftPages.create} element={<Nft />} />
         </Route>

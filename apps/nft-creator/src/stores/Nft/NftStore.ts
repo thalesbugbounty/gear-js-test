@@ -9,6 +9,8 @@ export class NftStore extends BaseStore {
   constructor(rootStore: Store) {
     super(rootStore);
 
+    this.loadProgramState = this.loadProgramState.bind(this);
+
     makeObservable(this, {
       tokens: observable,
       setTokens: action.bound,

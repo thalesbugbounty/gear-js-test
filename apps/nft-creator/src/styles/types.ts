@@ -2,7 +2,7 @@ import { BORDER_WIDTH, BORDER_RADIUS } from './';
 
 // ____Colors
 
-type Color = `#${string}`;
+export type Color = `#${string}`;
 
 type BackgroundColorName = 'primary' | 'secondary';
 type StatusColorName = 'danger' | 'success' | 'warn';

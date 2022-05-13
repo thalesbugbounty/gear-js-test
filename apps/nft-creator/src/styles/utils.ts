@@ -9,9 +9,14 @@ import {
   TypographyColorName,
   TypographyColors,
   WithTheme,
+  BackgroundColors,
+  BasicColors,
+  Color,
+  backgroundTransparent,
+  FONT_SIZE,
+  LINE_HEIGHT,
+  PromptFontFamily,
 } from './';
-import { backgroundTransparent } from './constants';
-import { FONT_SIZE, LINE_HEIGHT, RobotoFontFamily } from './typography';
 
 export const getPalette = (theme: Theme): Palette => theme.colors;
 
@@ -30,6 +35,11 @@ export const getBorderPalette = (theme: Theme): BorderColors => {
   return { ...status, ...basic };
 };
 
+export const getBackgroundPalette = (theme: Theme): BackgroundColors => {
+  const { background } = getPalette(theme);
+  return { ...background };
+};
+
 export const getButtonPalette = (theme: Theme): ButtonColors => {
   const { status, basic } = getPalette(theme);
   return { ...status, ...basic };
@@ -38,6 +48,11 @@ export const getButtonPalette = (theme: Theme): ButtonColors => {
 export const getTypographyPalette = (theme: Theme): TypographyColors => {
   const { status, text } = getPalette(theme);
   return { ...status, ...text };
+};
+
+export const getBasicPalette = (theme: Theme): BasicColors => {
+  const { basic } = getPalette(theme);
+  return { ...basic };
 };
 
 export const getTypographyColor = ({
@@ -54,7 +69,7 @@ export const baseStyles = ({ theme }: WithTheme): FlattenSimpleInterpolation => 
   const palette = getPalette(theme);
   return css`
     body {
-      ${RobotoFontFamily}
+      ${PromptFontFamily}
       background: ${palette.background.primary};
       color: ${palette.text.primary};
       font-size: ${FONT_SIZE.m};
@@ -85,4 +100,12 @@ export const fontFace = (
       display: swap;
     }
   `;
+};
+
+export const hexToRgba = (hex: Color, opacity = 1) => {
+  const colors = hex.match(/[0-9a-f]{1,2}/g) as string[];
+
+  const rgb = colors.map(color => parseInt(color, 16));
+
+  return `rgba(${rgb.join(',')},${opacity})`;
 };

@@ -1,10 +1,9 @@
 import { normalize } from 'styled-normalize';
 import { createGlobalStyle } from 'styled-components/macro';
-import { baseStyles } from '.';
-import { fonts } from './fonts';
+import { baseStyles, reset } from '.';
 
 export const GlobalStyle = createGlobalStyle`
   ${normalize}
-  ${fonts}
+  ${reset}
   ${baseStyles}
 `;

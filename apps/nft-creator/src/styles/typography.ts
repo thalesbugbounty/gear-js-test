@@ -4,6 +4,10 @@ export const RobotoFontFamily = css`
   font-family: 'Roboto', sans-serif;
 `;
 
+export const PromptFontFamily = css`
+  font-family: 'Prompt', sans-serif;
+`;
+
 export const FONT_WEIGHT = {
   bold: '700',
   demiBold: '600',

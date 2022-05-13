@@ -11,6 +11,7 @@ export const TYPOGRAPHY_SIZE = {
   xs: 'xs',
   s: 's',
   m: 'm',
+  l: 'l',
 } as const;
 
 export const TYPOGRAPHY_TAG = {
@@ -36,6 +37,10 @@ export const FONT_STYLE: FontStyle = {
   [TYPOGRAPHY_SIZE.m]: {
     fontSize: FONT_SIZE.m,
     lineHeight: LINE_HEIGHT.m,
+  },
+  [TYPOGRAPHY_SIZE.l]: {
+    fontSize: FONT_SIZE.l,
+    lineHeight: LINE_HEIGHT.l,
   },
 };
 

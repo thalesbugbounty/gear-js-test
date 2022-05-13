@@ -16,7 +16,7 @@ export const colorSet = {
   blue: '#5361e7',
   blue300: '#808aed',
   blue700: '#2638e1',
-  davysGrey: '#858585',
+  davysGrey: '#bcbcbc',
   onyx: '#282828',
   cadetBlueCrayola: '#adb5bd',
   grey: '#3d3d3d',

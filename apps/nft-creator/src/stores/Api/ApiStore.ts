@@ -103,12 +103,12 @@ export class ApiStore extends BaseStore {
   }
 
   public async readStateOfProgram() {
-    if (!this.store.account.accountId || !PROGRAMM_ID || !this.metaBuffer || !this.api) {
+    if (!PROGRAMM_ID || !this.metaBuffer || !this.api) {
       return;
     }
 
     try {
-      const state = await this.api.programState.read(PROGRAMM_ID, this.metaBuffer, { AllTokens: null });
+      const state = await this.api?.programState.read(PROGRAMM_ID, this.metaBuffer, { AllTokens: null });
       return state.toHuman() as unknown as StateOfProgram;
     } catch (error) {
       throw new Error(`${error}`);

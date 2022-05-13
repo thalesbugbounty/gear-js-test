@@ -30,3 +30,6 @@ export const BORDER_RADIUS = {
 export const backgroundTransparent = `background-color: transparent`;
 export const outlineNone = `outline: none`;
 export const borderNone = `border: none`;
+
+export const LAYOUT_WIDTH = '1200px';
+export const TOKEN_IMG_HEIGHT = '230px';
