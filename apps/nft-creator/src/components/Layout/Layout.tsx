@@ -10,7 +10,7 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: ${LAYOUT_WIDTH};
-  height: 100vh;
+  min-height: 100vh;
   margin: 0 auto;
   overflow: hidden;
 `;

@@ -1,4 +1,4 @@
-import { BORDER_WIDTH, BORDER_RADIUS } from './';
+import { BORDER_WIDTH, BORDER_RADIUS, BORDER_TYPE } from './';
 
 // ____Colors
 
@@ -42,6 +42,7 @@ export type WithTheme<T = unknown> = T & PropsWithTheme;
 
 export type BorderWidth = keyof typeof BORDER_WIDTH;
 export type BorderRadius = keyof typeof BORDER_RADIUS;
+export type BorderType = keyof typeof BORDER_TYPE;
 export type BorderColorName = StatusColorName | BasicColorName;
 export type BorderColors = Record<BorderColorName, string>;
 

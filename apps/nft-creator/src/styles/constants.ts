@@ -37,6 +37,11 @@ export const BORDER_RADIUS = {
   none: '0px',
 } as const;
 
+export const BORDER_TYPE = {
+  solid: 'solid',
+  dashed: 'dashed',
+} as const;
+
 export const backgroundTransparent = `background-color: transparent`;
 export const outlineNone = `outline: none`;
 export const borderNone = `border: none`;
