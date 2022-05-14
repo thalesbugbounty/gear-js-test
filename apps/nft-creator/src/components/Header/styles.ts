@@ -8,6 +8,7 @@ export const Wrapper = styled(Box)`
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
+  flex: 0 0 auto;
 `;
 
 export const Actions = styled.div`

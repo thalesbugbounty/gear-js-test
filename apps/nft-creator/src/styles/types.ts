@@ -8,6 +8,7 @@ type BackgroundColorName = 'primary' | 'secondary';
 type StatusColorName = 'danger' | 'success' | 'warn';
 type TextColorName = 'primary' | 'secondary';
 type BasicColorName = 'brand' | 'white' | 'black' | 'disabled' | 'dark';
+type SpecialColorName = 'eerieBlack';
 
 export type BackgroundColors = Record<BackgroundColorName, Color>;
 export type StatusColors = Record<StatusColorName, Color>;
@@ -15,6 +16,7 @@ export type TextColors = Record<TextColorName, Color>;
 export type BasicColors = Record<BasicColorName, Color>;
 export type HoverColors = Record<StatusColorName | TextColorName | BasicColorName, Color>;
 export type ActiveColors = Record<StatusColorName | TextColorName | BasicColorName, Color>;
+export type SpecialColors = Record<SpecialColorName, Color>;
 
 export interface Palette {
   background: BackgroundColors;
@@ -23,6 +25,7 @@ export interface Palette {
   basic: BasicColors;
   hover: HoverColors;
   active: ActiveColors;
+  special: SpecialColors;
 }
 
 export interface Theme {

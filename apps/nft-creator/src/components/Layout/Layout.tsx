@@ -1,26 +1,25 @@
-import { Outlet } from 'react-router-dom';
-import { INDENT, LAYOUT_WIDTH } from '../../styles';
+import styled from 'styled-components/macro';
+import { LAYOUT_WIDTH } from '../../styles';
+import { Footer } from '../Footer';
 import { Header } from '../Header';
-import { Box } from '../ui/Box';
+import { Background } from './components/Background';
+import { Main } from './components/Main';
 
-interface Props {
-  isControl?: boolean;
-}
+export const Wrapper = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: ${LAYOUT_WIDTH};
+  height: 100vh;
+  margin: 0 auto;
+  overflow: hidden;
+`;
 
-export const Layout: React.FC<React.PropsWithChildren<Props>> = ({ isControl }) => {
-  return (
-    <Box
-      colspan={12}
-      // rowGap={INDENT.xxxs}
-      columnGap={INDENT.xs}
-      control={isControl}
-      width={LAYOUT_WIDTH}
-      margin="auto"
-    >
-      <Header />
-      <Box tag="main">
-        <Outlet />
-      </Box>
-    </Box>
-  );
-};
+export const Layout = () => (
+  <Wrapper>
+    <Background />
+    <Header />
+    <Main />
+    <Footer />
+  </Wrapper>
+);

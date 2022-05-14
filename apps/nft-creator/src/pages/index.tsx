@@ -10,7 +10,7 @@ import { MyNfts } from './Nfts/components/MyNfts';
 export default () => {
   return (
     <Routes>
-      <Route path="/" element={<Layout isControl={true} />}>
+      <Route path="/" element={<Layout />}>
         <Route index element={<Main />} />
         <Route path="nfts" element={<Nfts />}>
           <Route path=":id" element={<Nft />} />

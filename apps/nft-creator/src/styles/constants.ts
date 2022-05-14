@@ -14,6 +14,16 @@ export const INDENT = {
   auto: 'auto',
 } as const;
 
+export const Z_INDEX = {
+  level0: 0,
+  level1: 5,
+  level2: 10,
+  level3: 15,
+  level4: 20,
+  level5: 25,
+  levelTop: 999,
+} as const;
+
 export const BORDER_WIDTH = {
   s: '1px',
   m: '2px',
