@@ -8,7 +8,7 @@ export const CollectionButton = observer(props => {
   const navigate = useNavigate();
 
   const onClickHandler = () => {
-    navigate('/nfts');
+    navigate('/');
   };
 
   return <Button text="My collection" onClick={onClickHandler} disabled={!accountId} {...props} />;
