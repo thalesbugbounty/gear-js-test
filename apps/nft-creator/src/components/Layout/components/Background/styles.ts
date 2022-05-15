@@ -21,7 +21,7 @@ const imgBg = ({ theme }: WithTheme): FlattenSimpleInterpolation => {
     background: radial-gradient(
       circle,
       ${hexToRgba(palette.primary, 0)} 0%,
-      ${hexToRgba(palette.primary, 1)} 55%,
+      ${hexToRgba(palette.primary, 1)} 65%,
       ${hexToRgba(palette.primary, 1)} 100%
     );
   `;
@@ -29,6 +29,7 @@ const imgBg = ({ theme }: WithTheme): FlattenSimpleInterpolation => {
 
 export const Wrapper = styled.div`
   position: absolute;
+  max-height: 750px;
   top: 0;
   left: 0;
   right: 0;
@@ -46,7 +47,6 @@ export const Image = styled.img`
   height: 100%;
   margin: auto;
   display: block;
-  transform: rotate(180deg);
   z-index: ${Z_INDEX.level1};
 `;
 
@@ -65,5 +65,5 @@ export const Rect = styled.div`
   min-height: 500px;
   width: 100%;
   z-index: ${Z_INDEX.level3};
-  opacity: 0.7;
+  opacity: 0.9;
 `;

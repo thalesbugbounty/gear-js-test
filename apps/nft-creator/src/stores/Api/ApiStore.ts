@@ -7,6 +7,8 @@ import optWasm from '../../assets/nft.opt.wasm';
 import { NODE_ADDRESS, PROGRAMM_ID } from '../../utils/vars';
 import { getBuffer } from './utils';
 import { StateOfProgram } from '../types';
+import { web3FromSource } from '@polkadot/extension-dapp';
+import { ISubmittableResult, AnyJson } from '@polkadot/types/types';
 
 export class ApiStore extends BaseStore {
   public api: GearApi | undefined;
@@ -24,6 +26,8 @@ export class ApiStore extends BaseStore {
     this.fetchOptWasm = this.fetchOptWasm.bind(this);
     this.calculateGas = this.calculateGas.bind(this);
     this.readStateOfProgram = this.readStateOfProgram.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
+    this.handleStatus = this.handleStatus.bind(this);
 
     makeObservable(this, {
       api: observable,
@@ -71,11 +75,35 @@ export class ApiStore extends BaseStore {
     }
   }
 
-  // public async sendMessage() {
+  public async sendMessage(payload: AnyJson) {
+    const account = this.store.account.currentAccount;
 
-  // }
+    if (!PROGRAMM_ID || !account || !this.api) {
+      return;
+    }
 
-  public async calculateGas() {
+    const {
+      address,
+      meta: { source },
+    } = account;
+
+    const gasLimit = await this.calculateGas(payload);
+
+    this.api.message.submit(
+      {
+        destination: PROGRAMM_ID,
+        payload,
+        gasLimit: gasLimit || 100000000,
+        value: 0,
+      },
+      this.meta,
+    );
+
+    const { signer } = await web3FromSource(source);
+    this.api.message.signAndSend(address, { signer }, this.handleStatus);
+  }
+
+  public async calculateGas(payload: AnyJson) {
     if (!this.store.account.accountId || !PROGRAMM_ID) {
       return;
     }
@@ -84,19 +112,12 @@ export class ApiStore extends BaseStore {
       const gas = await this.api?.program.gasSpent.handle(
         this.store.account.accountId,
         PROGRAMM_ID,
-        {
-          Mint: {
-            tokenMetadata: {
-              name: 'Text',
-              description: 'Text',
-              media: 'Text',
-              reference: 'Text',
-            },
-          },
-        },
+        payload,
         0,
         this.meta,
       );
+
+      return gas;
     } catch (error) {
       throw new Error(`${error}`);
     }
@@ -117,5 +138,9 @@ export class ApiStore extends BaseStore {
 
   public get isApiReady(): boolean {
     return !!this.api;
+  }
+
+  private handleStatus(result: ISubmittableResult): void {
+    if (result.status.isFinalized) alert('success transaction');
   }
 }

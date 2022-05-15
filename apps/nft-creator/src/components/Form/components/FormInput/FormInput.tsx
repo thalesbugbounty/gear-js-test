@@ -6,8 +6,10 @@ type Props = {
   name: string;
 } & InputProps;
 
-export const FormInput: React.FC<Props> = memo(({ name }) => {
-  const { input } = useField<string>(name);
+export const FormInput: React.FC<Props> = memo(({ name, ...rest }) => {
+  const {
+    input: { onChange, value },
+  } = useField<string>(name);
 
-  return <Input {...input} />;
+  return <Input onChange={onChange} value={value} {...rest} />;
 });

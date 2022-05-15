@@ -20,3 +20,14 @@ export interface StateOfProgram {
     tokens: Token[];
   };
 }
+
+export interface MessagePayload {
+  Mint: {
+    tokenMetadata: {
+      name: string;
+      description: string;
+      media: string;
+      reference: string;
+    };
+  };
+}

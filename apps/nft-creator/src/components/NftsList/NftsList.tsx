@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { Token as Item } from '../../../../components/Token';
-import { Token } from '../../../../stores/types';
+import { Token as Item } from '../Token';
+import { Token } from '../../stores/types';
 import * as S from './styles';
 
 type Props = {
