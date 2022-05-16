@@ -1,11 +1,12 @@
 import { useParams } from 'react-router-dom';
-import { BoxBordered } from '../../components/ui/Box';
+import { Title } from '../../components/Title';
+import * as S from './styles';
 
 export const Nft = () => {
   const { id } = useParams<{ id?: string }>();
   return (
-    <BoxBordered borderColor="success" borderRadius="none">
-      Nft #{id}
-    </BoxBordered>
+    <S.Wrapper>
+      <Title title={`NFT #${id}`} />
+    </S.Wrapper>
   );
 };
