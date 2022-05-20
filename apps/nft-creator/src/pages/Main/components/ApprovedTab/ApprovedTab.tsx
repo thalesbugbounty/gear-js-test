@@ -5,7 +5,12 @@ import { Spinner } from '../../../../components/Spinner';
 import { useNftStore } from '../../../../stores';
 
 export const ApprovedTab = observer(() => {
-  const { tokens, tokensLoader, readApprovedTokens, reset } = useNftStore();
+  const {
+    tokens,
+    readLoader: { isLoading },
+    readApprovedTokens,
+    reset,
+  } = useNftStore();
 
   useEffect(() => {
     readApprovedTokens();
@@ -17,8 +22,8 @@ export const ApprovedTab = observer(() => {
 
   return (
     <>
-      {tokensLoader.isLoading && <Spinner size="medium" />}
-      {!tokensLoader.isLoading && <NftsList tokens={tokens} />}
+      {isLoading && <Spinner size="medium" />}
+      {!isLoading && <NftsList tokens={tokens} />}
     </>
   );
 });

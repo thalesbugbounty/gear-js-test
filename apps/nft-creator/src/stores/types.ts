@@ -16,14 +16,20 @@ export interface Token {
   reference: string;
 }
 
-export interface Tokens {
+export interface TokensResponse {
   tokens: Token[];
 }
 
-export type StateOfProgramResponse = Record<keyof typeof States, Tokens>;
-export type StateOfProgramRequest = Partial<Record<keyof typeof States, null | { owner: Hex }>>;
+export interface TokenResponse {
+  token: Token;
+}
 
-export interface MessagePayload {
+export type StateName = keyof typeof States;
+
+export type StateOfProgramResponse = Record<StateName, TokensResponse & TokenResponse>;
+export type StateOfProgramRequest = Partial<Record<StateName, null | { owner: Hex } | { tokenId: string }>>;
+
+export interface MintPayload {
   Mint: {
     tokenMetadata: {
       name: string;
@@ -31,5 +37,19 @@ export interface MessagePayload {
       media: string;
       reference: string;
     };
+  };
+}
+
+export interface ApprovePayload {
+  Approve: {
+    to: Hex;
+    tokenId: string;
+  };
+}
+
+export interface TransferPayload {
+  Transfer: {
+    to: Hex;
+    tokenId: string;
   };
 }

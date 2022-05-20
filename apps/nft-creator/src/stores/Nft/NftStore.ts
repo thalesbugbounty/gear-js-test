@@ -1,91 +1,124 @@
 import { Hex } from '@gear-js/api';
 import { AnyJson, ISubmittableResult } from '@polkadot/types/types';
-import { action, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { Store } from '..';
 import { BaseStore } from '../BaseStore';
 import { LoadingStore } from '../Loading/LoadingStore';
-import { Token } from '../types';
+import { ApprovePayload, MintPayload, Token, TransferPayload } from '../types';
 
 export class NftStore extends BaseStore {
   tokens: Token[] = [];
 
-  tokensLoader: LoadingStore;
+  token: Token | null = null;
 
-  mintLoader: LoadingStore;
+  readLoader: LoadingStore;
 
-  approveLoader: LoadingStore;
+  messageLoader: LoadingStore;
+
+  test = false;
 
   constructor(rootStore: Store) {
     super(rootStore);
 
-    this.tokensLoader = new LoadingStore();
-    this.mintLoader = new LoadingStore();
-    this.approveLoader = new LoadingStore();
+    this.readLoader = new LoadingStore();
+    this.messageLoader = new LoadingStore();
 
+    this.readToken = this.readToken.bind(this);
     this.readAllTokens = this.readAllTokens.bind(this);
     this.readMyTokens = this.readMyTokens.bind(this);
     this.readApprovedTokens = this.readApprovedTokens.bind(this);
     this.mint = this.mint.bind(this);
-    this.handleMintStatus = this.handleMintStatus.bind(this);
     this.approve = this.approve.bind(this);
-    this.handleApproveStatus = this.handleApproveStatus.bind(this);
+    this.transfer = this.transfer.bind(this);
+    this.handleMessageStatus = this.handleMessageStatus.bind(this);
 
     makeObservable(this, {
       tokens: observable,
-      tokensLoader: observable,
-      mintLoader: observable,
-      approveLoader: observable,
+      token: observable,
+      readLoader: observable,
+      messageLoader: observable,
+      test: observable,
       setTokens: action.bound,
       reset: action.bound,
+      isOwner: computed,
+      isApproved: computed,
     });
+  }
+
+  get isOwner(): boolean {
+    console.log(this.token, this.token?.ownerId, this.store.account.accountId);
+    return !!this.token && !!this.store.account.accountId && this.token.ownerId === this.store.account.accountId;
+  }
+
+  get isApproved(): boolean {
+    return (
+      !!this.token &&
+      !!this.store.account.accountId &&
+      !!this.token.approvedAccountIds.find(approvedAcc => approvedAcc === this.store.account.accountId)
+    );
   }
 
   public setTokens(tokens: Token[]) {
     this.tokens = tokens;
   }
 
+  public setToken(token: Token) {
+    this.token = token;
+  }
+
   public async readAllTokens() {
-    this.tokensLoader.setIsLoading(true);
+    this.readLoader.setIsLoading(true);
     const state = await this.store.api.readState();
     if (!!state) this.setTokens(state.AllTokens.tokens);
-    this.tokensLoader.setIsLoading(false);
+    this.readLoader.setIsLoading(false);
+  }
+
+  public async readToken(tokenId: string) {
+    this.readLoader.setIsLoading(true);
+    const state = await this.store.api.readState({ Token: { tokenId } });
+    if (!!state) this.setToken(state.Token.token);
+    this.readLoader.setIsLoading(false);
   }
 
   public async readMyTokens() {
-    this.tokensLoader.setIsLoading(true);
+    this.readLoader.setIsLoading(true);
     const state = await this.store.api.readState({ TokensForOwner: { owner: this.store.account.accountId as Hex } });
     if (!!state) this.setTokens(state.TokensForOwner.tokens);
-    this.tokensLoader.setIsLoading(false);
+    this.readLoader.setIsLoading(false);
   }
 
   public async readApprovedTokens() {
-    this.tokensLoader.setIsLoading(true);
+    this.readLoader.setIsLoading(true);
     const state = await this.store.api.readState({ SupplyForOwner: { owner: this.store.account.accountId as Hex } });
     //TODO: add approved tokens from state
     this.setTokens([]);
-    this.tokensLoader.setIsLoading(false);
+    this.readLoader.setIsLoading(false);
   }
 
-  public async mint(payload: AnyJson) {
-    this.mintLoader.setIsLoading(true);
-    await this.store.api.sendMessage(payload, this.handleMintStatus);
+  public async mint(payload: MintPayload) {
+    this.messageLoader.setIsLoading(true);
+    await this.store.api.sendMessage(payload as unknown as AnyJson, this.handleMessageStatus);
   }
 
-  protected handleMintStatus({ isFinalized }: ISubmittableResult): void {
-    if (isFinalized) this.mintLoader.setIsLoading(false);
+  public async approve(payload: ApprovePayload) {
+    this.messageLoader.setIsLoading(true);
+    await this.store.api.sendMessage(payload as unknown as AnyJson, this.handleMessageStatus);
   }
 
-  public async approve(payload: AnyJson) {
-    this.approveLoader.setIsLoading(true);
-    await this.store.api.sendMessage(payload, this.handleApproveStatus);
+  public async transfer(payload: TransferPayload) {
+    this.messageLoader.setIsLoading(true);
+    await this.store.api.sendMessage(payload as unknown as AnyJson, this.handleMessageStatus);
   }
 
-  protected handleApproveStatus({ isFinalized }: ISubmittableResult): void {
-    if (isFinalized) this.approveLoader.setIsLoading(false);
+  public handleMessageStatus(result: ISubmittableResult): void {
+    const { isFinalized } = result;
+    this.messageLoader.setIsLoading(!isFinalized);
+    this.test = !isFinalized;
   }
 
   public reset() {
     this.tokens = [];
-    this.tokensLoader.setIsLoading(false);
+    this.token = null;
+    this.readLoader.setIsLoading(false);
   }
 }

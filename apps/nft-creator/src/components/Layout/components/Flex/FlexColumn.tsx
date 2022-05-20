@@ -1,8 +1,7 @@
 import styled from 'styled-components/macro';
 
-export const Section = styled.section`
+//TODO implement component with props
+export const FlexColumn = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
 `;

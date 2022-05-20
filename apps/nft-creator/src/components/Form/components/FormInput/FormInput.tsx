@@ -1,6 +1,7 @@
 import { useField } from 'react-final-form';
 import { Input, InputProps } from '@gear-js/ui';
 import { memo } from 'react';
+import * as S from './styles';
 
 type Props = {
   name: string;
@@ -11,5 +12,9 @@ export const FormInput: React.FC<Props> = memo(({ name, ...rest }) => {
     input: { onChange, value },
   } = useField<string>(name);
 
-  return <Input onChange={onChange} value={value} {...rest} />;
+  return (
+    <S.InputWrapper>
+      <Input onChange={onChange} value={value} {...rest} />
+    </S.InputWrapper>
+  );
 });

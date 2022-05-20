@@ -69,7 +69,7 @@ export const baseStyles = ({ theme }: WithTheme): FlattenSimpleInterpolation => 
   const palette = getPalette(theme);
   return css`
     body {
-      ${PromptFontFamily}
+      ${PromptFontFamily};
       background: ${palette.background.primary};
       color: ${palette.text.primary};
       font-size: ${FONT_SIZE.m};

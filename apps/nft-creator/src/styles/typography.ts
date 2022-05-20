@@ -4,9 +4,9 @@ export const RobotoFontFamily = css`
   font-family: 'Roboto', sans-serif;
 `;
 
-export const PromptFontFamily = css`
-  font-family: 'Prompt', sans-serif;
-`;
+export const PromptFontFamily = `font-family: 'Prompt', sans-serif;`;
+
+export const SyncopateFontFamily = `font-family: 'Syncopate', sans-serif;`;
 
 export const FONT_WEIGHT = {
   bold: '700',

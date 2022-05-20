@@ -1,5 +1,10 @@
-import { FONT_SIZE, FONT_WEIGHT, LINE_HEIGHT } from '../../../styles';
-import { FontStyle, WeightStyle } from './types';
+import { FONT_SIZE, FONT_WEIGHT, LINE_HEIGHT, PromptFontFamily, SyncopateFontFamily } from '../../../styles';
+import { FamilyStyle, FontStyle, WeightStyle } from './types';
+
+export const TYPOGRAPHY_FAMILY = {
+  prompt: 'prompt',
+  syncopate: 'syncopate',
+} as const;
 
 export const TYPOGRAPHY_WEIGHT = {
   bold: 'bold',
@@ -48,4 +53,9 @@ export const WEIGHT_STYLE: WeightStyle = {
   [TYPOGRAPHY_WEIGHT.bold]: FONT_WEIGHT.bold,
   [TYPOGRAPHY_WEIGHT.regular]: FONT_WEIGHT.regular,
   [TYPOGRAPHY_WEIGHT.light]: FONT_WEIGHT.light,
+};
+
+export const FAMILY_STYLE: FamilyStyle = {
+  [TYPOGRAPHY_FAMILY.prompt]: PromptFontFamily,
+  [TYPOGRAPHY_FAMILY.syncopate]: SyncopateFontFamily,
 };

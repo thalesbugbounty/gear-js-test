@@ -11,7 +11,7 @@ const H1 = styled(Typography)`
 `;
 
 export const Title: React.FC<React.PropsWithChildren<Props>> = ({ title, ...rest }) => (
-  <H1 size="l" color="primary" tag="h1" {...rest}>
+  <H1 size="l" color="primary" tag="h1" family="syncopate" {...rest}>
     {title}
   </H1>
 );

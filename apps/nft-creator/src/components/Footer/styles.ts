@@ -9,6 +9,7 @@ const border = ({ theme }: WithTheme) => {
 };
 
 export const Wrapper = styled.footer`
+  ${border};
   flex: 0 0 auto;
   width: 100%;
   display: flex;
@@ -16,6 +17,5 @@ export const Wrapper = styled.footer`
   align-items: center;
   padding-top: ${INDENT.m};
   padding-bottom: ${INDENT.m};
-  ${border};
   z-index: ${Z_INDEX.level1};
 `;

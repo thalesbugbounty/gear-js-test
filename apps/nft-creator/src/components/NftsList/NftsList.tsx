@@ -16,7 +16,7 @@ export const NftsList: React.FC<Props> = memo(({ tokens }) => {
       {!!tokens.length &&
         tokens.map(({ id, name, media }) => (
           <S.Item key={id}>
-            <Link to={`/nfts/${id}`}>
+            <Link to={`/nft/${id}`}>
               <Item id={id} image={media} name={name} />
             </Link>
           </S.Item>

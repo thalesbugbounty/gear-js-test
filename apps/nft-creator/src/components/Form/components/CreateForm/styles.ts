@@ -6,10 +6,6 @@ export const Form = styled.form`
   min-width: 400px;
 `;
 
-export const InputWrapper = styled.div`
-  margin: ${INDENT.s} ${INDENT.none};
-`;
-
 export const ButtonLoader = styled.div`
   display: flex;
   flex-wrap: nowrap;

@@ -1,11 +1,10 @@
 import styled, { css } from 'styled-components/macro';
-import { PromptFontFamily } from '../../../styles';
 import { TYPOGRAPHY_TAG } from './constants';
 import { TypographyProps } from './types';
-import { getFontStyle, getFontColor, getFontWeight } from './utils';
+import { getFontStyle, getFontColor, getFontWeight, getFontFamily } from './utils';
 
 export const typographyStyle = css<TypographyProps>`
-  ${PromptFontFamily};
+  ${getFontFamily};
   ${getFontStyle};
   ${getFontColor};
   ${getFontWeight};

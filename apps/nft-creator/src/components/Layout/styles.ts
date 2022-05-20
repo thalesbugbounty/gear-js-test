@@ -9,7 +9,6 @@ export const Wrapper = styled.div`
   min-height: 100vh;
   margin: 0 auto;
   overflow: hidden;
-  padding-bottom: ${INDENT.xxxs};
 `;
 
 export const Main = styled.main`
@@ -17,4 +16,5 @@ export const Main = styled.main`
   flex: 1 0 auto;
   overflow: auto;
   z-index: ${Z_INDEX.level1};
+  margin-bottom: ${INDENT.xs};
 `;

@@ -1,7 +1,30 @@
 import { css, FlattenSimpleInterpolation } from 'styled-components/macro';
 import { getTypographyColor, WithTheme } from '../../../styles';
-import { TYPOGRAPHY_SIZE, FONT_STYLE, WEIGHT_STYLE, TYPOGRAPHY_WEIGHT } from './constants';
-import { TypographyProps, TypographySize, FontStyle, TypographyWeight, WeightStyle } from './types';
+import {
+  TYPOGRAPHY_SIZE,
+  FONT_STYLE,
+  WEIGHT_STYLE,
+  TYPOGRAPHY_WEIGHT,
+  FAMILY_STYLE,
+  TYPOGRAPHY_FAMILY,
+} from './constants';
+import {
+  TypographyProps,
+  TypographySize,
+  FontStyle,
+  TypographyWeight,
+  WeightStyle,
+  TypographyFamily,
+  FamilyStyle,
+} from './types';
+
+const getTypographyFamilyStyle = (
+  family: TypographyFamily,
+  style: FamilyStyle = FAMILY_STYLE,
+): FlattenSimpleInterpolation =>
+  css`
+    ${style[family]};
+  `;
 
 const getTypographyFontStyle = (size: TypographySize, style: FontStyle = FONT_STYLE): FlattenSimpleInterpolation => {
   const { fontSize, lineHeight } = style[size];
@@ -19,6 +42,10 @@ const getTypographyWeightStyle = (
   css`
     font-weight: ${style[weight]};
   `;
+
+export const getFontFamily = ({ family = TYPOGRAPHY_FAMILY.prompt }: TypographyProps): FlattenSimpleInterpolation => {
+  return getTypographyFamilyStyle(family);
+};
 
 export const getFontStyle = ({ size = TYPOGRAPHY_SIZE.s }: TypographyProps): FlattenSimpleInterpolation => {
   return getTypographyFontStyle(size);

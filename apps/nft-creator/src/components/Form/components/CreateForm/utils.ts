@@ -1,7 +1,7 @@
-import { AnyJson } from '@polkadot/types/types';
+import { MintPayload } from '../../../../stores/types';
 import { Values } from './CreateForm';
 
-export const mapFormToPayload = (values: Values): AnyJson => {
+export const mapFormToPayload = (values: Values): MintPayload => {
   return {
     Mint: {
       tokenMetadata: {

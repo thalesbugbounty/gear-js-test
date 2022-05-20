@@ -15,7 +15,10 @@ export type Values = {
 };
 
 export const CreateForm = observer(() => {
-  const { mint, mintLoader } = useNftStore();
+  const {
+    mint,
+    messageLoader: { isLoading },
+  } = useNftStore();
   const { accountId } = useAccountStore();
   const onSubmit = (values: Values) => {
     const payload = mapFormToPayload(values);
@@ -28,21 +31,13 @@ export const CreateForm = observer(() => {
       initialValues={{ title: '123', subtitle: '321' }}
       render={({ handleSubmit }) => (
         <S.Form onSubmit={handleSubmit}>
-          <S.InputWrapper>
-            <FormInput name="name" placeholder="Enter the name" />
-          </S.InputWrapper>
-          <S.InputWrapper>
-            <FormInput name="description" placeholder="Describe your NFT" />
-          </S.InputWrapper>
-          <S.InputWrapper>
-            <FormInput name="media" placeholder="Enter attributes if any (Example: rarity: common, eyes: black)" />
-          </S.InputWrapper>
-          <S.InputWrapper>
-            <FormInput name="reference" placeholder="Enter the file" />
-          </S.InputWrapper>
+          <FormInput name="name" placeholder="Enter the name" />
+          <FormInput name="description" placeholder="Describe your NFT" />
+          <FormInput name="media" placeholder="Enter attributes if any (Example: rarity: common, eyes: black)" />
+          <FormInput name="reference" placeholder="Enter the file" />
           <S.ButtonLoader>
             <Button type="submit" text="CREATE NFT" disabled={!accountId} />
-            {mintLoader.isLoading && <Spinner status="In progress" />}
+            {isLoading && <Spinner status="In progress" />}
           </S.ButtonLoader>
         </S.Form>
       )}

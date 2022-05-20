@@ -1,7 +1,7 @@
 import styled, { css, FlattenSimpleInterpolation } from 'styled-components/macro';
 import { getBasicPalette, getBorderRadius, hexToRgba, INDENT, TOKEN_IMG_HEIGHT, WithTheme } from '../../styles';
 
-const nftBg = ({ theme }: WithTheme): FlattenSimpleInterpolation => {
+export const tokenBg = ({ theme }: WithTheme): FlattenSimpleInterpolation => {
   const palette = getBasicPalette(theme);
 
   return css`
@@ -10,7 +10,7 @@ const nftBg = ({ theme }: WithTheme): FlattenSimpleInterpolation => {
 };
 
 export const Token = styled.article`
-  ${nftBg};
+  ${tokenBg};
   ${getBorderRadius()}
   width: 100%;
   height: auto;
