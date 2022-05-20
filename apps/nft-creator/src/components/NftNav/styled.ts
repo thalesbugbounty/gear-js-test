@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import styled, { css, FlattenSimpleInterpolation } from 'styled-components/macro';
 import { getActivePalette, getBasicPalette, getBorderRadius, getHoverPalette, INDENT, WithTheme } from '../../styles';
 import { ItemProps } from './types';
@@ -10,10 +9,10 @@ const backgroundNav = ({ theme }: WithTheme): FlattenSimpleInterpolation => {
   `;
 };
 
-const itemColor = ({ checked, theme }: WithTheme<ItemProps>): FlattenSimpleInterpolation => {
-  const basic = getBasicPalette(theme);
-  const active = getActivePalette(theme);
-  const color = checked ? active.dark : basic.dark;
+const itemColor = ({ active, theme }: WithTheme<ItemProps>): FlattenSimpleInterpolation => {
+  const basicColors = getBasicPalette(theme);
+  const activeColors = getActivePalette(theme);
+  const color = active ? activeColors.dark : basicColors.dark;
   return css`
     background-color: ${color};
   `;
@@ -35,7 +34,7 @@ export const Wrapper = styled.nav`
   display: flex;
 `;
 
-export const Item = styled(Link)<ItemProps>`
+export const Item = styled.div<ItemProps>`
   ${itemColor};
   padding: ${INDENT.xxs} ${INDENT.sm};
   margin-right: ${INDENT.xxxs};

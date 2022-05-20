@@ -1,21 +1,22 @@
-import { useLocation } from 'react-router-dom';
-import { NftPages } from '../../pages/constants';
+import { FilterTabs } from '../../pages/constants';
 import * as S from './styled';
 
 type Props = {
-  prefix?: string;
+  onSelect?: (value: string) => void;
+  checked?: string;
 };
 
-export const NftNav: React.FC<Props> = ({ prefix }) => {
-  const { pathname } = useLocation();
+export const NftNav: React.FC<Props> = ({ checked, onSelect }) => {
   return (
     <S.Wrapper>
-      {Object.keys(NftPages).map(page => {
-        const to = `/${prefix || ''}/${page}`;
-        const checked = pathname === to;
+      {Object.keys(FilterTabs).map(tab => {
+        const active = checked === tab;
+        const onSelectHandle = () => {
+          if (!!onSelect) onSelect(tab);
+        };
         return (
-          <S.Item checked={checked} to={to} key={page}>
-            {page}
+          <S.Item active={active} key={tab} onClick={onSelectHandle}>
+            {tab}
           </S.Item>
         );
       })}

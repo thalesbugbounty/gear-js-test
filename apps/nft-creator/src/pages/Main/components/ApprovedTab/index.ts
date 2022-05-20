@@ -1,0 +1,1 @@
+export { ApprovedTab } from './ApprovedTab';

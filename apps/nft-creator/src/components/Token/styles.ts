@@ -9,7 +9,7 @@ const nftBg = ({ theme }: WithTheme): FlattenSimpleInterpolation => {
   `;
 };
 
-export const Container = styled.article`
+export const Token = styled.article`
   ${nftBg};
   ${getBorderRadius()}
   width: 100%;
@@ -20,12 +20,14 @@ export const Container = styled.article`
 `;
 
 export const Image = styled.img`
-  height: ${TOKEN_IMG_HEIGHT};
+  width: 100%;
+  height: auto;
+  min-height: ${TOKEN_IMG_HEIGHT};
 `;
 
 export const Description = styled.div`
-  padding-top: ${INDENT.m};
-  padding-bottom: ${INDENT.m};
+  padding-top: ${INDENT.s};
+  padding-bottom: ${INDENT.s};
   width: 100%;
   display: flex;
   flex-direction: column;

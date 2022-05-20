@@ -3,8 +3,9 @@ import { Button } from '@gear-js/ui';
 import { FormInput } from '../FormInput';
 import * as S from './styles';
 import { observer } from 'mobx-react-lite';
-import { useApiStore } from '../../../../stores';
+import { useAccountStore, useNftStore } from '../../../../stores';
 import { mapFormToPayload } from './utils';
+import { Spinner } from '../../../Spinner';
 
 export type Values = {
   name: string;
@@ -14,11 +15,12 @@ export type Values = {
 };
 
 export const CreateForm = observer(() => {
-  const { sendMessage } = useApiStore();
+  const { mint, mintLoader } = useNftStore();
+  const { accountId } = useAccountStore();
   const onSubmit = (values: Values) => {
     const payload = mapFormToPayload(values);
 
-    sendMessage(payload);
+    mint(payload);
   };
   return (
     <Form
@@ -38,7 +40,10 @@ export const CreateForm = observer(() => {
           <S.InputWrapper>
             <FormInput name="reference" placeholder="Enter the file" />
           </S.InputWrapper>
-          <Button type="submit" text="CREATE NFT" />
+          <S.ButtonLoader>
+            <Button type="submit" text="CREATE NFT" disabled={!accountId} />
+            {mintLoader.isLoading && <Spinner status="In progress" />}
+          </S.ButtonLoader>
         </S.Form>
       )}
     />

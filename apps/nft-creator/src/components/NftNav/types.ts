@@ -1,3 +1,3 @@
 export type ItemProps = {
-  checked: boolean;
+  active: boolean;
 };

@@ -9,3 +9,12 @@ export const Form = styled.form`
 export const InputWrapper = styled.div`
   margin: ${INDENT.s} ${INDENT.none};
 `;
+
+export const ButtonLoader = styled.div`
+  display: flex;
+  flex-wrap: nowrap;
+
+  button {
+    margin-right: ${INDENT.l};
+  }
+`;

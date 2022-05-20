@@ -1,1 +1,0 @@
-export { ApprovedNfts } from './ApprovedNfts';

@@ -1,23 +1,22 @@
-import { useEffect } from 'react';
-import { useApiStore, useNftStore } from '../../stores';
+import { useApiStore } from '../../stores';
 import { observer } from 'mobx-react-lite';
 import * as S from './styles';
-import { NftsList } from '../../components/NftsList';
-import { Title } from '../../components/Title';
+import { Tabs } from './components/Tabs';
+import { Spinner } from '../../components/Spinner';
+import { Typography } from '../../components/ui/Typography';
 
 export const Main = observer(() => {
-  const { isApiReady } = useApiStore();
-  const { loadProgramState, tokens } = useNftStore();
-  useEffect(() => {
-    if (isApiReady) {
-      loadProgramState();
-    }
-  }, [isApiReady, loadProgramState]);
+  const { isApiReady, apiLoader } = useApiStore();
 
   return (
-    <S.Wrapper>
-      <Title title="All NFT's" />
-      <NftsList tokens={tokens} />
-    </S.Wrapper>
+    <S.Main>
+      {!isApiReady && apiLoader.isLoading && <Spinner size="large" status="Api loading" />}
+      {!apiLoader.isLoading && isApiReady && <Tabs />}
+      {!apiLoader.isLoading && !isApiReady && (
+        <Typography color="danger" size="l">
+          Api not loaded!
+        </Typography>
+      )}
+    </S.Main>
   );
 });

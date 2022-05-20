@@ -37,10 +37,14 @@ export class AccountStore extends BaseStore {
   }
 
   public async checkAccounts() {
-    const extensions = await web3Enable('my cool dapp');
-    runInAction(() => {
-      this.isInjectedExtensions = !!extensions.length;
-    });
+    try {
+      const extensions = await web3Enable('my cool dapp');
+      runInAction(() => {
+        this.isInjectedExtensions = !!extensions.length;
+      });
+    } catch (error) {
+      throw new Error(`${error}`);
+    }
 
     if (!this.isInjectedExtensions) {
       return;

@@ -1,4 +1,4 @@
-import { GearApi, getWasmMetadata, Metadata } from '@gear-js/api';
+import { GearApi, getWasmMetadata, Metadata, TransactionStatusCb } from '@gear-js/api';
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 import { Store } from '..';
 import { BaseStore } from '../BaseStore';
@@ -6,9 +6,10 @@ import metaWasm from '../../assets/nft.meta.wasm';
 import optWasm from '../../assets/nft.opt.wasm';
 import { NODE_ADDRESS, PROGRAMM_ID } from '../../utils/vars';
 import { getBuffer } from './utils';
-import { StateOfProgram } from '../types';
+import { StateOfProgramResponse, StateOfProgramRequest } from '../types';
 import { web3FromSource } from '@polkadot/extension-dapp';
-import { ISubmittableResult, AnyJson } from '@polkadot/types/types';
+import { AnyJson } from '@polkadot/types/types';
+import { LoadingStore } from '../Loading/LoadingStore';
 
 export class ApiStore extends BaseStore {
   public api: GearApi | undefined;
@@ -19,26 +20,31 @@ export class ApiStore extends BaseStore {
 
   public metaBuffer: Buffer | undefined;
 
+  public apiLoader: LoadingStore;
+
   constructor(rootStore: Store) {
     super(rootStore);
 
     this.fetchMetaWasm = this.fetchMetaWasm.bind(this);
     this.fetchOptWasm = this.fetchOptWasm.bind(this);
     this.calculateGas = this.calculateGas.bind(this);
-    this.readStateOfProgram = this.readStateOfProgram.bind(this);
+    this.readState = this.readState.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
-    this.handleStatus = this.handleStatus.bind(this);
+
+    this.apiLoader = new LoadingStore();
 
     makeObservable(this, {
       api: observable,
       meta: observable,
       programmBuffer: observable,
       metaBuffer: observable,
+      apiLoader: observable,
       isApiReady: computed,
     });
   }
 
   public async initApi(): Promise<void> {
+    this.apiLoader.setIsLoading(true);
     try {
       const api = await GearApi.create({ providerAddress: NODE_ADDRESS });
       runInAction(() => {
@@ -46,6 +52,8 @@ export class ApiStore extends BaseStore {
       });
     } catch (error) {
       throw new Error(`${error}`);
+    } finally {
+      this.apiLoader.setIsLoading(false);
     }
   }
 
@@ -75,7 +83,7 @@ export class ApiStore extends BaseStore {
     }
   }
 
-  public async sendMessage(payload: AnyJson) {
+  public async sendMessage(payload: AnyJson, cb: TransactionStatusCb) {
     const account = this.store.account.currentAccount;
 
     if (!PROGRAMM_ID || !account || !this.api) {
@@ -100,7 +108,7 @@ export class ApiStore extends BaseStore {
     );
 
     const { signer } = await web3FromSource(source);
-    this.api.message.signAndSend(address, { signer }, this.handleStatus);
+    this.api.message.signAndSend(address, { signer }, cb);
   }
 
   public async calculateGas(payload: AnyJson) {
@@ -123,14 +131,14 @@ export class ApiStore extends BaseStore {
     }
   }
 
-  public async readStateOfProgram() {
+  public async readState(request: StateOfProgramRequest = { AllTokens: null }) {
     if (!PROGRAMM_ID || !this.metaBuffer || !this.api) {
       return;
     }
 
     try {
-      const state = await this.api?.programState.read(PROGRAMM_ID, this.metaBuffer, { AllTokens: null });
-      return state.toHuman() as unknown as StateOfProgram;
+      const state = await this.api.programState.read(PROGRAMM_ID, this.metaBuffer, request);
+      return state.toHuman() as unknown as StateOfProgramResponse;
     } catch (error) {
       throw new Error(`${error}`);
     }
@@ -138,9 +146,5 @@ export class ApiStore extends BaseStore {
 
   public get isApiReady(): boolean {
     return !!this.api;
-  }
-
-  private handleStatus(result: ISubmittableResult): void {
-    if (result.status.isFinalized) alert('success transaction');
   }
 }

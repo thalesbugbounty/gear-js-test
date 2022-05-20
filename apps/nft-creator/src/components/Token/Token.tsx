@@ -10,7 +10,7 @@ type Props = {
 
 export const Token: React.FC<Props> = ({ id, image, name }) => {
   return (
-    <S.Container>
+    <S.Token>
       <S.Image src={tokenImage} />
       <S.Description>
         <Typography size="l" tag="h3" weight="bold">
@@ -20,6 +20,6 @@ export const Token: React.FC<Props> = ({ id, image, name }) => {
           #{id}
         </Typography>
       </S.Description>
-    </S.Container>
+    </S.Token>
   );
 };

@@ -1,7 +1,7 @@
 import styled from 'styled-components/macro';
 import { INDENT, Z_INDEX } from '../../styles';
 import { Box } from '../ui/Box';
-import { CollectionButton as Button } from './components/CollectionButton';
+import { CreateButton as Button } from './components/CreateButton';
 
 export const Wrapper = styled(Box)`
   display: flex;

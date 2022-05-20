@@ -5,3 +5,9 @@ export const Rarity = {
 export const StorageItems = {
   account: 'account',
 } as const;
+
+export const States = {
+  AllTokens: 'AllTokens',
+  TokensForOwner: 'TokensForOwner',
+  SupplyForOwner: 'SupplyForOwner',
+} as const;

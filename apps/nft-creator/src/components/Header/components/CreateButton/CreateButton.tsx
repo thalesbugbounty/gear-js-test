@@ -3,13 +3,13 @@ import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
 import { useAccountStore } from '../../../../stores';
 
-export const CollectionButton = observer(props => {
+export const CreateButton = observer(props => {
   const { accountId } = useAccountStore();
   const navigate = useNavigate();
 
   const onClickHandler = () => {
-    navigate('/');
+    navigate('/create');
   };
 
-  return <Button text="My collection" onClick={onClickHandler} disabled={!accountId} {...props} />;
+  return <Button text="Create" onClick={onClickHandler} disabled={!accountId} {...props} />;
 });

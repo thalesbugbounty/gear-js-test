@@ -1,4 +1,5 @@
 import { Hex } from '@gear-js/api';
+import { States } from './constants';
 
 export interface Attribute {
   name: string;
@@ -15,11 +16,12 @@ export interface Token {
   reference: string;
 }
 
-export interface StateOfProgram {
-  AllTokens: {
-    tokens: Token[];
-  };
+export interface Tokens {
+  tokens: Token[];
 }
+
+export type StateOfProgramResponse = Record<keyof typeof States, Tokens>;
+export type StateOfProgramRequest = Partial<Record<keyof typeof States, null | { owner: Hex }>>;
 
 export interface MessagePayload {
   Mint: {
