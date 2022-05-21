@@ -28,15 +28,13 @@ export const TransferForm = observer(() => {
     transfer(payload);
   };
 
-  // console.log(messageLoader.isLoading);
   return (
-    <Form
+    <Form<Values>
       onSubmit={onSubmit}
-      initialValues={{ transferId: '' }}
       render={({ handleSubmit, values: { transferId } }) => {
         return (
           <form onSubmit={handleSubmit}>
-            <FormInput name="transferId" placeholder="Enter the address" />
+            <FormInput<Values> name="transferId" placeholder="Enter the address" />
             {isLoading && <Spinner status="In progress" />}
             {!isLoading && <Button type="submit" text="Transfer" disabled={!transferId} />}
           </form>

@@ -15,8 +15,6 @@ export class NftStore extends BaseStore {
 
   messageLoader: LoadingStore;
 
-  test = false;
-
   constructor(rootStore: Store) {
     super(rootStore);
 
@@ -37,25 +35,26 @@ export class NftStore extends BaseStore {
       token: observable,
       readLoader: observable,
       messageLoader: observable,
-      test: observable,
       setTokens: action.bound,
+      setToken: action.bound,
       reset: action.bound,
-      isOwner: computed,
-      isApproved: computed,
+      isAvailableForTransfer: computed,
+      isAvailableForApprove: computed,
     });
   }
 
-  get isOwner(): boolean {
-    console.log(this.token, this.token?.ownerId, this.store.account.accountId);
-    return !!this.token && !!this.store.account.accountId && this.token.ownerId === this.store.account.accountId;
-  }
-
-  get isApproved(): boolean {
+  get isAvailableForTransfer(): boolean {
+    const accountId = this.store.account.accountId;
     return (
       !!this.token &&
-      !!this.store.account.accountId &&
-      !!this.token.approvedAccountIds.find(approvedAcc => approvedAcc === this.store.account.accountId)
+      !!accountId &&
+      (this.token.ownerId === accountId || !!this.token.approvedAccountIds.find(approvedId => approvedId === accountId))
     );
+  }
+
+  get isAvailableForApprove(): boolean {
+    const accountId = this.store.account.accountId;
+    return !!this.token && !!accountId && this.token.ownerId === accountId;
   }
 
   public setTokens(tokens: Token[]) {
@@ -89,8 +88,8 @@ export class NftStore extends BaseStore {
 
   public async readApprovedTokens() {
     this.readLoader.setIsLoading(true);
-    const state = await this.store.api.readState({ SupplyForOwner: { owner: this.store.account.accountId as Hex } });
     //TODO: add approved tokens from state
+    const state = await this.store.api.readState({ SupplyForOwner: { owner: this.store.account.accountId as Hex } });
     this.setTokens([]);
     this.readLoader.setIsLoading(false);
   }
@@ -113,7 +112,6 @@ export class NftStore extends BaseStore {
   public handleMessageStatus(result: ISubmittableResult): void {
     const { isFinalized } = result;
     this.messageLoader.setIsLoading(!isFinalized);
-    this.test = !isFinalized;
   }
 
   public reset() {

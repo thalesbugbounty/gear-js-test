@@ -1,6 +1,5 @@
 import { observer } from 'mobx-react-lite';
 import { useAccountStore } from '../../../../stores';
-import { AccountButton } from '../AccountButton';
 import * as S from './styles';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
@@ -17,10 +16,10 @@ export const Accounts: React.FC<Props> = observer(({ onChange }) => {
   };
 
   return (
-    <S.Wrapper>
+    <S.Accounts>
       {accounts.map(account => (
-        <AccountButton key={account.address} account={account} onClick={() => onClickHandle(account)} />
+        <S.Button key={account.address} account={account} onClick={() => onClickHandle(account)} />
       ))}
-    </S.Wrapper>
+    </S.Accounts>
   );
 });

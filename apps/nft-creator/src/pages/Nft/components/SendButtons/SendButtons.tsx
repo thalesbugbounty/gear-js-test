@@ -5,12 +5,12 @@ import { TransferButton } from '../TransferButton';
 import * as S from './styles';
 
 export const SendButtons = observer(() => {
-  const { isApproved, isOwner } = useNftStore();
+  const { isAvailableForApprove, isAvailableForTransfer } = useNftStore();
 
   return (
     <S.SendButtons>
-      {(isApproved || isOwner) && <TransferButton />}
-      {isApproved && <ApproveButton />}
+      {isAvailableForTransfer && <TransferButton />}
+      {isAvailableForApprove && <ApproveButton />}
     </S.SendButtons>
   );
 });

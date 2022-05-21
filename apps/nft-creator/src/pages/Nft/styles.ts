@@ -33,6 +33,7 @@ export const Description = styled.div`
   flex-direction: column;
   align-items: center;
 `;
+
 export const Attributes = styled.div`
   grid-area: attributes;
   display: flex;

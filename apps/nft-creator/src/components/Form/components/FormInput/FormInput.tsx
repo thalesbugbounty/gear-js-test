@@ -1,20 +1,22 @@
 import { useField } from 'react-final-form';
-import { Input, InputProps } from '@gear-js/ui';
+import { Input as InputComponent, InputProps } from '@gear-js/ui';
 import { memo } from 'react';
 import * as S from './styles';
 
-type Props = {
-  name: string;
+type Props<T> = {
+  name: keyof T;
 } & InputProps;
 
-export const FormInput: React.FC<Props> = memo(({ name, ...rest }) => {
+function Input<T extends Record<string, string | number>>({ name, ...rest }: React.PropsWithChildren<Props<T>>) {
   const {
     input: { onChange, value },
   } = useField<string>(name);
 
   return (
     <S.InputWrapper>
-      <Input onChange={onChange} value={value} {...rest} />
+      <InputComponent onChange={onChange} value={value} {...rest} />
     </S.InputWrapper>
   );
-});
+}
+
+export const FormInput = memo(Input) as typeof Input;

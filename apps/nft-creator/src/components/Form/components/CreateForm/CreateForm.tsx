@@ -26,15 +26,17 @@ export const CreateForm = observer(() => {
     mint(payload);
   };
   return (
-    <Form
+    <Form<Values>
       onSubmit={onSubmit}
-      initialValues={{ title: '123', subtitle: '321' }}
       render={({ handleSubmit }) => (
         <S.Form onSubmit={handleSubmit}>
-          <FormInput name="name" placeholder="Enter the name" />
-          <FormInput name="description" placeholder="Describe your NFT" />
-          <FormInput name="media" placeholder="Enter attributes if any (Example: rarity: common, eyes: black)" />
-          <FormInput name="reference" placeholder="Enter the file" />
+          <FormInput<Values> name="name" placeholder="Enter the name" />
+          <FormInput<Values> name="description" placeholder="Describe your NFT" />
+          <FormInput<Values>
+            name="media"
+            placeholder="Enter attributes if any (Example: rarity: common, eyes: black)"
+          />
+          <FormInput<Values> name="reference" placeholder="Enter the file" />
           <S.ButtonLoader>
             <Button type="submit" text="CREATE NFT" disabled={!accountId} />
             {isLoading && <Spinner status="In progress" />}

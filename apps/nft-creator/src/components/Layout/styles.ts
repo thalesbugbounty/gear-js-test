@@ -16,5 +16,5 @@ export const Main = styled.main`
   flex: 1 0 auto;
   overflow: auto;
   z-index: ${Z_INDEX.level1};
-  margin-bottom: ${INDENT.xs};
+  margin-bottom: ${INDENT.m};
 `;

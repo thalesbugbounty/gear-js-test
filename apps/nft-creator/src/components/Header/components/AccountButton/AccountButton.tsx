@@ -9,9 +9,9 @@ type Props = {
   onClick: () => void;
 };
 
-export const AccountButton: React.FC<Props> = memo(({ account, onClick }) => {
+export const AccountButton: React.FC<Props> = memo(({ account, onClick, ...rest }) => {
   return (
-    <ButtonContained onClick={onClick} color="dark">
+    <ButtonContained onClick={onClick} color="dark" {...rest}>
       <S.Content>
         <IdentIcon value={account.address} theme="polkadot" size={28} />
         <S.Text>{account.meta.name}</S.Text>

@@ -9,6 +9,7 @@ import { ApprovePayload } from '../../../../stores/types';
 
 export type Values = {
   approveId: Hex;
+  test: string;
 };
 
 export const ApproveForm = observer(() => {
@@ -30,13 +31,13 @@ export const ApproveForm = observer(() => {
 
   // console.log(messageLoader.isLoading);
   return (
-    <Form
+    <Form<Values>
       onSubmit={onSubmit}
-      initialValues={{ ApproveId: '' }}
+      // initialValues={{ approveId: '' }}
       render={({ handleSubmit, values: { approveId } }) => {
         return (
           <form onSubmit={handleSubmit}>
-            <FormInput name="ApproveId" placeholder="Enter the address" />
+            <FormInput<Values> name="approveId" placeholder="Enter the address" />
             {isLoading && <Spinner status="In progress" />}
             {!isLoading && <Button type="submit" text="Approve" disabled={!approveId} />}
           </form>
