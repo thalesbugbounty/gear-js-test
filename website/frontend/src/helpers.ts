@@ -6,7 +6,7 @@ import { GetMetaResponse } from 'api/responses';
 import { DEVELOPMENT_CHAIN, LOCAL_STORAGE } from 'consts';
 import { NODE_ADDRESS_REGEX } from 'regexes';
 import { InitialValues as SendMessageInitialValues } from './components/pages/Send/children/MessageForm/types';
-import { InitialValues as UploadInitialValues } from './components/pages/Programs/children/Upload/children/UploadForm/types';
+import { FormValues as UploadInitialValues } from './components/pages/Programs/children/Upload/children/UploadForm/types';
 import { SetFieldValue } from 'types/common';
 import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
 
@@ -83,9 +83,9 @@ export const getLocalPrograms = (params: any) => {
 
       data.result.count = iterationNumber;
 
-      if (params.term) {
+      if (params.query) {
         if (
-          (elem.name?.includes(params.term) || elem.id?.includes(params.term)) &&
+          (elem.name?.includes(params.query) || elem.id?.includes(params.query)) &&
           iterationNumber <= newLimit &&
           iterationNumber > params.offset
         ) {
@@ -96,7 +96,7 @@ export const getLocalPrograms = (params: any) => {
       }
     })
     .then(() => {
-      data.result.programs.sort((prev, next) => (prev.timestamp > next.timestamp ? -1 : 1));
+      data.result.programs.sort((prev, next) => Date.parse(next.timestamp) - Date.parse(prev.timestamp));
 
       return data;
     });
