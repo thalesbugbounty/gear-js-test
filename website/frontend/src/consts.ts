@@ -11,6 +11,8 @@ export const INITIAL_LIMIT_BY_PAGE = 13;
 export const GEAR_BALANCE_TRANSFER_VALUE = 10_000_000_000;
 export const MIN_GAS_LIMIT = 20_000_000;
 
+export const HCAPTCHA_SITE_KEY = process.env.REACT_APP_HCAPTCHA_SITE_KEY as string;
+
 export const LOCAL_STORAGE = {
   CHAIN: 'chain',
   GENESIS: 'genesis',
@@ -68,8 +70,8 @@ export const RPC_METHODS = {
   GET_PAYLOAD_TYPE: 'message.payloadType',
   READ_EVENTS: 'events.subscribe',
   ADD_PUBLIC: 'user.addPublicKey',
-  ADD_METADATA: 'program.addMeta',
-  GET_METADATA: 'program.getMeta',
+  ADD_METADATA: 'program.meta.add',
+  GET_METADATA: 'program.meta.get',
   GET_TEST_BALANCE: 'testBalance.get',
   GET_ALL_MESSAGES: 'message.all',
   GET_MESSAGE: 'message.data',
@@ -101,6 +103,11 @@ export const KEY_TYPES = {
 };
 
 export const DEVELOPMENT_CHAIN = 'Development';
+
+export const URL_PARAMS = {
+  PAGE: 'page',
+  QUERY: 'query',
+};
 
 export enum ZIndexes {
   'alert' = 999,

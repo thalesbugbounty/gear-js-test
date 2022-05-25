@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useReducer, useEffect, useState } from 'react';
-import { useAlert } from 'react-alert';
+import { useAlert } from 'hooks';
 import { saveAs } from 'file-saver';
 import Editor from '@monaco-editor/react';
 import JSZip from 'jszip';
@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import get from 'lodash.get';
 
-import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
+import { PageHeader } from 'components/blocks/legacy/PageHeader/PageHeader';
 import { useEditor } from 'hooks';
 import { EDITOR_BTNS, PAGE_TYPES, WASM_COMPILER_BUILD, LOCAL_STORAGE } from 'consts';
 

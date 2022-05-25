@@ -1,12 +1,12 @@
 import { Hex } from '@gear-js/api';
 import { Metadata } from '@polkadot/types';
-import { AlertContainer } from 'react-alert';
+import { AlertContainerFactory } from "context/alert/types"
 import { localPrograms } from 'services/LocalDBService';
 import { GetMetaResponse } from 'api/responses';
 import { DEVELOPMENT_CHAIN, LOCAL_STORAGE } from 'consts';
 import { NODE_ADDRESS_REGEX } from 'regexes';
 import { InitialValues as SendMessageInitialValues } from './components/pages/Send/children/MessageForm/types';
-import { InitialValues as UploadInitialValues } from './components/pages/Programs/children/Upload/children/UploadForm/types';
+import { FormValues as UploadInitialValues } from './components/pages/Programs/children/Upload/children/UploadForm/types';
 import { SetFieldValue } from 'types/common';
 import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
 
@@ -83,9 +83,9 @@ export const getLocalPrograms = (params: any) => {
 
       data.result.count = iterationNumber;
 
-      if (params.term) {
+      if (params.query) {
         if (
-          (elem.name?.includes(params.term) || elem.id?.includes(params.term)) &&
+          (elem.name?.includes(params.query) || elem.id?.includes(params.query)) &&
           iterationNumber <= newLimit &&
           iterationNumber > params.offset
         ) {
@@ -96,7 +96,7 @@ export const getLocalPrograms = (params: any) => {
       }
     })
     .then(() => {
-      data.result.programs.sort((prev, next) => (prev.timestamp > next.timestamp ? -1 : 1));
+      data.result.programs.sort((prev, next) => Date.parse(next.timestamp) - Date.parse(prev.timestamp));
 
       return data;
     });
@@ -105,6 +105,7 @@ export const getLocalPrograms = (params: any) => {
 export const getLocalProgram = (id: string) => {
   const result: ProgramModel = {
     id: '',
+    owner: '',
     timestamp: '',
     initStatus: ProgramStatus.Success,
   };
@@ -150,7 +151,7 @@ export const checkFileFormat = (file: File) => {
   return fileExt === 'wasm';
 };
 
-export const getPreformattedText = (data: any) => JSON.stringify(data, null, 4);
+export const getPreformattedText = (data: unknown) => JSON.stringify(data, null, 4);
 
 export const calculateGas = async (
   method: string,
@@ -158,20 +159,20 @@ export const calculateGas = async (
   isManualPayload: boolean,
   values: UploadInitialValues | SendMessageInitialValues,
   setFieldValue: SetFieldValue,
-  alert: AlertContainer,
+  alert: AlertContainerFactory,
   meta: any,
   code?: Uint8Array | null,
   addressId?: String | null,
   replyCodeError?: string
 ) => {
-  const payload = isManualPayload ? values.payload : values.fields;
+  const payload = isManualPayload ? values.payload : values.__root;
 
   if (isManualPayload && payload === '') {
     alert.error(`Error: payload can't be empty`);
     return;
   }
 
-  if (!isManualPayload && Object.keys(payload).length === 0) {
+  if (!isManualPayload && payload && Object.keys(payload).length === 0) {
     alert.error(`Error: form can't be empty`);
     return;
   }

@@ -5,6 +5,7 @@ import {
   GetAllProgramsParams,
   GetAllProgramsResult,
   GetAllUserProgramsParams,
+  ProgramDataResult,
 } from '@gear-js/interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -49,9 +50,9 @@ export class ProgramsService {
   }
 
   async getAllUserPrograms(params: GetAllUserProgramsParams): Promise<GetAllProgramsResult> {
-    const { genesis, owner, term } = params;
+    const { genesis, owner, query } = params;
     const [result, total] = await this.programRepo.findAndCount({
-      where: getWhere({ genesis, owner }, term, ['id', 'title', 'name']),
+      where: getWhere({ genesis, owner }, query, ['id', 'title', 'name']),
       ...getPaginationParams(params),
       order: {
         timestamp: 'DESC',
@@ -64,9 +65,9 @@ export class ProgramsService {
   }
 
   async getAllPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {
-    const { term, genesis } = params;
+    const { query, genesis } = params;
     const [result, total] = await this.programRepo.findAndCount({
-      where: getWhere({ genesis }, term, ['id', 'title', 'name']),
+      where: getWhere({ genesis }, query, ['id', 'title', 'name']),
       ...getPaginationParams(params),
       order: {
         timestamp: 'DESC',
@@ -78,10 +79,24 @@ export class ProgramsService {
     };
   }
 
-  async findProgram(params: FindProgramParams): Promise<IProgram> {
+  async findProgram(params: FindProgramParams): Promise<ProgramDataResult> {
     const { id, genesis, owner } = params;
     const where = owner ? { id, genesis, owner } : { id, genesis };
-    const program = await this.programRepo.findOne({ where, relations: ['meta'] });
+    const program = await this.programRepo.findOne({
+      where,
+      select: {
+        id: true,
+        genesis: true,
+        blockHash: true,
+        timestamp: true,
+        owner: true,
+        name: true,
+        initStatus: true,
+        title: true,
+        meta: { meta: true },
+      },
+      relations: ['meta'],
+    });
     if (!program) {
       throw new ProgramNotFound();
     }
@@ -93,5 +108,11 @@ export class ProgramsService {
     const program = await this.findProgram({ id, genesis });
     program.initStatus = status;
     return this.programRepo.save(program);
+  }
+
+  async deleteRecords(genesis: string): Promise<any> {
+    const programs = await this.programRepo.find({ where: { genesis } });
+    await this.programRepo.remove(programs);
+    return programs;
   }
 }

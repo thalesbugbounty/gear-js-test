@@ -1,7 +1,10 @@
+import { MetaFieldsValues } from 'components/MetaFields';
+
 export type InitialValues = {
   gasLimit: number;
   value: number;
   payload: string;
+  payloadType: string;
   destination: string;
-  fields: {};
+  __root: MetaFieldsValues | null;
 };

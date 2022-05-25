@@ -1,28 +1,30 @@
 import { useContext } from 'react';
-import { ApiContext } from 'context/api';
-import { BlocksContext } from 'context/blocks';
-import { AccountContext } from 'context/account';
-import { EditorContext } from 'context/editor';
-import { LoadingContext } from 'context/loading';
+import { ApiContext, AccountContext, AlertContext, BlocksContext, EditorContext } from 'context';
 import { useEvents } from './useEvents';
 import { useOutsideClick } from './useOutsideClick';
 import { useBodyScrollLock } from './useBodyScrollLock';
 import { useSubscription } from './useSubscription';
+import { useChangeEffect } from './useChangeEffect';
+import { useProgram } from './useProgram';
+import { useCodeUpload } from './useCodeUpload';
 
 const useApi = () => useContext(ApiContext);
+const useAlert = () => useContext(AlertContext);
 const useBlocks = () => useContext(BlocksContext);
 const useAccount = () => useContext(AccountContext);
 const useEditor = () => useContext(EditorContext);
-const useLoading = () => useContext(LoadingContext);
 
 export {
   useApi,
+  useAlert,
   useBlocks,
   useAccount,
   useEditor,
-  useLoading,
   useEvents,
+  useProgram,
+  useCodeUpload,
   useOutsideClick,
+  useChangeEffect,
   useBodyScrollLock,
   useSubscription,
 };

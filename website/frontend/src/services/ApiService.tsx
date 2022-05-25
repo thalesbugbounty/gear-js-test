@@ -1,43 +1,31 @@
-import { AlertContainer } from 'react-alert';
-import { UploadProgramModel, Message, Reply, MetaModel, ProgramStatus } from 'types/program';
+import { AlertContainerFactory } from 'context/alert/types';
+import { UploadProgramModel, Message, Reply, ProgramStatus } from 'types/program';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { CreateType, GearKeyring, GearMessage, GearMessageReply, Metadata } from '@gear-js/api';
-import { RPC_METHODS, PROGRAM_ERRORS, LOCAL_STORAGE } from 'consts';
+import { CreateType, GearApi, GearKeyring, GearMessage, GearMessageReply, Metadata } from '@gear-js/api';
+import { RPC_METHODS, PROGRAM_ERRORS, LOCAL_STORAGE, EVENT_TYPES } from 'consts';
 import { localPrograms } from './LocalDBService';
 import { readFileAsync, signPayload, isDevChain, getLocalProgramMeta } from 'helpers';
 import ServerRPCRequestService from './ServerRPCRequestService';
 import { nodeApi } from 'api/initApi';
 import { GetMetaResponse } from 'api/responses';
+import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'context/alert/const';
 
 // TODO: (dispatch) fix it later
 
 export const UploadProgram = async (
-  api: any,
+  api: GearApi,
   account: InjectedAccountWithMeta,
   file: File,
-  opts: UploadProgramModel,
+  programModel: UploadProgramModel,
   metaFile: any,
-  enableLoading: () => void,
-  disableLoading: () => void,
-  alert: AlertContainer,
+  alert: AlertContainerFactory,
   callback: () => void
 ) => {
   const apiRequest = new ServerRPCRequestService();
+  const { gasLimit, value, initPayload, meta, title, programName } = programModel;
 
   /* eslint-disable @typescript-eslint/naming-convention */
-  const {
-    gasLimit,
-    value,
-    initPayload,
-    init_input,
-    init_output,
-    handle_input,
-    handle_output,
-    types,
-    title,
-    programName,
-  } = opts;
   let name = '';
 
   if (programName) {
@@ -50,43 +38,44 @@ export const UploadProgram = async (
 
   const fileBuffer: any = await readFileAsync(file);
 
-  const program = {
-    code: new Uint8Array(fileBuffer),
-    gasLimit: gasLimit.toString(),
-    value: value.toString(),
-    initPayload,
-  };
+  const program: any /* `any` should be removed when it becomes possible to specify type of the code as Uint8Array (next update of @gear-js/api)*/ =
+    {
+      code: new Uint8Array(fileBuffer),
+      gasLimit: gasLimit.toString(),
+      value: value.toString(),
+      initPayload,
+    };
 
-  const meta = {
-    init_input,
-    init_output,
-    handle_input,
-    handle_output,
-    types,
-  };
+  const alertTitle = 'gear.submitProgram';
+
+  const alertId = alert.loading('SignIn', { title: alertTitle });
 
   try {
-    const { programId } = await api.program.submit(program, meta);
+    const { programId } = api.program.submit(program, meta);
 
-    await api.program.signAndSend(account.address, { signer: injector.signer }, (data: any) => {
-      enableLoading();
+    await api.program.signAndSend(account.address, { signer: injector.signer }, (data) => {
+      if (data.status.isReady) {
+        alert.update(alertId, 'Ready');
+
+        return;
+      }
 
       if (data.status.isInBlock) {
-        alert.success('Upload program: In block');
+        alert.update(alertId, 'InBlock');
+
+        return;
       }
 
       if (data.status.isFinalized) {
-        data.events.forEach((event: any) => {
-          const { method } = event.event;
+        alert.update(alertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
 
+        data.events.forEach(({ event: { method } }) => {
           if (method === 'InitMessageEnqueued') {
-            alert.success('Upload program: Finalized');
-            disableLoading();
             callback();
 
             if (isDevChain()) {
               localPrograms
-                .setItem(programId, {
+                .setItem(programId as string /* the same */, {
                   id: programId,
                   name,
                   title,
@@ -132,19 +121,21 @@ export const UploadProgram = async (
           }
 
           if (method === 'ExtrinsicFailed') {
-            alert.error('Upload program: Extrinsic Failed');
+            alert.error('Extrinsic Failed', {
+              title: alertTitle,
+            });
           }
         });
+
+        return;
       }
 
       if (data.status.isInvalid) {
-        disableLoading();
-        alert.error(PROGRAM_ERRORS.INVALID_TRANSACTION);
+        alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
       }
     });
   } catch (error) {
-    disableLoading();
-    alert.error(`Upload program: ${error}`);
+    alert.update(alertId, `${error}`, DEFAULT_ERROR_OPTIONS);
   }
 };
 
@@ -153,58 +144,71 @@ export const sendMessage = async (
   api: GearMessage | GearMessageReply,
   account: InjectedAccountWithMeta,
   message: Message & Reply,
-  enableLoading: () => void,
-  disableLoading: () => void,
-  alert: AlertContainer,
+  alert: AlertContainerFactory,
   callback: () => void,
-  meta?: Metadata
+  meta?: Metadata,
+  payloadType?: string
 ) => {
+  const alertTitle = 'gear.sendMessage';
+
+  const alertId = alert.loading('SignIn', { title: alertTitle });
+
   try {
     const { signer } = await web3FromSource(account.meta.source);
 
-    await api.submit(message, meta);
-    await api.signAndSend(account.address, { signer }, (data: any) => {
-      enableLoading();
+    api.submit(message, meta, payloadType);
+
+    await api.signAndSend(account.address, { signer }, (data) => {
+      if (data.status.isReady) {
+        alert.update(alertId, 'Ready');
+
+        return;
+      }
 
       if (data.status.isInBlock) {
-        alert.success('Send message: In block');
+        alert.update(alertId, 'InBlock');
+
+        return;
       }
 
       if (data.status.isFinalized) {
-        data.events.forEach((event: any) => {
-          const { method } = event.event;
+        alert.update(alertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
+
+        data.events.forEach(({ event }) => {
+          const { method, section } = event;
 
           if (method === 'DispatchMessageEnqueued') {
-            alert.success('Send message: Finalized');
-            disableLoading();
+            alert.success('Success', { title: `${section}.DispatchMessageEnqueued` });
             callback();
+
+            return;
           }
 
           if (method === 'ExtrinsicFailed') {
-            alert.error('Extrinsic Failed');
+            alert.error('Extrinsic Failed', { title: alertTitle });
           }
         });
+
+        return;
       }
 
       if (data.status.isInvalid) {
-        disableLoading();
-        alert.error(PROGRAM_ERRORS.INVALID_TRANSACTION);
+        alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
       }
     });
   } catch (error) {
-    alert.error(`Send message: ${error}`);
-    disableLoading();
+    alert.update(alertId, `${error}`, DEFAULT_ERROR_OPTIONS);
   }
 };
 
 // TODO: (dispatch) fix it later
 export const addMetadata = async (
-  meta: MetaModel,
+  meta: Metadata,
   metaFile: any,
   account: InjectedAccountWithMeta,
   programId: string,
   name: any,
-  alert: AlertContainer
+  alert: AlertContainerFactory
 ) => {
   const apiRequest = new ServerRPCRequestService();
   const injector = await web3FromSource(account.meta.source);
@@ -257,41 +261,47 @@ export const addMetadata = async (
   });
 };
 
-export const subscribeToEvents = (alert: AlertContainer) => {
+export const subscribeToEvents = (alert: AlertContainerFactory) => {
   const filterKey = localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
+
   nodeApi.subscribeToProgramEvents(({ method, data: { info, reason } }) => {
     // @ts-ignore
     if (info.origin.toHex() === filterKey) {
-      const message = `${method}\n ${info.programId.toHex()}`;
+      const isInitFailure = method === EVENT_TYPES.PROGRAM_INITIALIZATION_FAILURE;
+      const initFailureReason = reason?.isDispatch && reason?.asDispatch.toHuman();
+      const methodString = initFailureReason && isInitFailure ? `${method}: ${initFailureReason}` : `${method}`;
+      const programId = info.programId.toHex();
+      const message = `${methodString}\n${programId}`;
       const showAlert = reason ? alert.error : alert.success;
+
       showAlert(message);
     }
   });
 
-  nodeApi.subscribeToLogEvents(async ({ data: { source, dest, reply, payload } }) => {
-    let meta = null;
-    let decodedPayload: any;
-    const programId = source.toHex();
-    const apiRequest = new ServerRPCRequestService();
+  nodeApi.subscribeToLogEvents(async ({ data: { source, destination, reply, payload } }) => {
+    if (destination.toHex() === filterKey) {
+      let meta = null;
+      let decodedPayload: any;
+      const programId = source.toHex();
+      const apiRequest = new ServerRPCRequestService();
 
-    const { result } = isDevChain()
-      ? await getLocalProgramMeta(programId)
-      : await apiRequest.callRPC<GetMetaResponse>(RPC_METHODS.GET_METADATA, { programId });
+      const { result } = isDevChain()
+        ? await getLocalProgramMeta(programId)
+        : await apiRequest.callRPC<GetMetaResponse>(RPC_METHODS.GET_METADATA, { programId });
 
-    if (result && result.meta) {
-      meta = JSON.parse(result.meta);
-    }
+      if (result && result.meta) {
+        meta = JSON.parse(result.meta);
+      }
 
-    try {
-      decodedPayload =
-        meta.output && !(reply.isSome && reply.unwrap()[1].toNumber() !== 0)
-          ? CreateType.decode(meta.output, payload, meta).toHuman()
-          : payload.toHuman();
-    } catch (error) {
-      console.error('Decode payload failed');
-    }
-    // @ts-ignore
-    if (dest.toHex() === filterKey) {
+      try {
+        decodedPayload =
+          meta.output && !(reply.isSome && reply.unwrap()[1].toNumber() !== 0)
+            ? CreateType.decode(meta.output, payload, meta).toHuman()
+            : payload.toHuman();
+      } catch (error) {
+        console.error('Decode payload failed');
+      }
+
       // TODO: add payload parsing
       const message = `LOG from program\n ${source.toHex()}\n ${decodedPayload ? `Response: ${decodedPayload}` : ''}`;
       const isSuccess = (reply.isSome && reply.unwrap()[1].toNumber() === 0) || reply.isNone;

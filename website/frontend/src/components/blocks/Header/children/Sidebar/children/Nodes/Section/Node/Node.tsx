@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction } from 'react';
-import { useAlert } from 'react-alert';
+import { useAlert } from 'hooks';
 import copy from 'assets/images/copy.svg';
 import trash from 'assets/images/trash.svg';
 import { Button, Radio } from '@gear-js/ui';
@@ -29,6 +29,10 @@ const Node = ({ address, isCustom, setLocalNodes, selectedNode, setSelectedNode 
 
   const removeNode = () => {
     setLocalNodes((prevNodes) => prevNodes.filter((prevNode) => prevNode.address !== address));
+
+    if (selectedNode === address) {
+      setSelectedNode(nodeApi.address);
+    }
   };
 
   return (
@@ -41,9 +45,15 @@ const Node = ({ address, isCustom, setLocalNodes, selectedNode, setSelectedNode 
         onChange={handleChange}
       />
       <div className={styles.buttons}>
-        <Button icon={copy} color="transparent" onClick={handleCopy} />
+        <Button aria-label="Copy node address" icon={copy} color="transparent" onClick={handleCopy} />
         {isCustom && (
-          <Button icon={trash} color="transparent" onClick={removeNode} disabled={address === nodeApi.address} />
+          <Button
+            aria-label="Remove node address"
+            icon={trash}
+            color="transparent"
+            onClick={removeNode}
+            disabled={address === nodeApi.address}
+          />
         )}
       </div>
     </li>
