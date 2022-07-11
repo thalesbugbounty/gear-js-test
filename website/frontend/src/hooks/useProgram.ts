@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Metadata } from '@gear-js/api';
+import { useAlert } from '@gear-js/react-hooks';
 
-import { useAlert } from 'hooks';
 import { getProgram } from 'services';
 import { RPCResponseError } from 'services/ServerRPCRequestService';
 import { ProgramModel } from 'types/program';
@@ -21,9 +21,11 @@ const useProgram = (id?: string): [ProgramModel?, Metadata?] => {
 
   useEffect(() => {
     if (id) {
-      getProgram(id).then(({ result }) => setProgram(result)).catch((err: RPCResponseError) => alert.error(err.message));
-    } 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+      getProgram(id)
+        .then(({ result }) => setProgram(result))
+        .catch((err: RPCResponseError) => alert.error(err.message));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   return [program, metadata];

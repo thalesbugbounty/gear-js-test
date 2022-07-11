@@ -1,19 +1,22 @@
-import { GearProgram } from './Program';
-import { GearMessage } from './Message';
-import { GearBalance } from './Balance';
-import { GearEvents } from './Events';
-import { GearProgramState } from './State';
-import { GearMessageReply } from './MessageReply';
-import { gearRpc, gearTypes } from './default';
-import { GearApiOptions } from './types/interfaces';
+import { SpRuntimeDispatchError } from '@polkadot/types/lookup';
+import { RegistryError } from '@polkadot/types-codec/types';
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { ContractExecResultErr, Event } from '@polkadot/types/interfaces';
-import { GearBlock } from './Blocks';
+import { Event } from '@polkadot/types/interfaces';
+
+import { GearMessageReply } from './MessageReply';
+import { GearApiOptions } from './types/interfaces';
+import { gearRpc, gearTypes } from './default';
+import { GearProgramState } from './State';
+import { GearWaitlist } from './Waitlist';
+import { GearClaimValue } from './Claim';
+import { GearProgram } from './Program';
 import { GearStorage } from './Storage';
 import { GearMailbox } from './Mailbox';
-import { GearClaimValue } from './Claim';
+import { GearMessage } from './Message';
+import { GearBalance } from './Balance';
+import { GearEvents } from './events';
+import { GearBlock } from './Blocks';
 import { GearCode } from './Code';
-import { RegistryError } from '@polkadot/types-codec/types';
 
 export class GearApi extends ApiPromise {
   public program: GearProgram;
@@ -22,12 +25,13 @@ export class GearApi extends ApiPromise {
   public reply: GearMessageReply;
   public balance: GearBalance;
   public gearEvents: GearEvents;
-  public defaultTypes: any;
+  public defaultTypes: Record<string, unknown>;
   public blocks: GearBlock;
   public storage: GearStorage;
   public mailbox: GearMailbox;
   public claimValueFromMailbox: GearClaimValue;
   public code: GearCode;
+  public waitlist: GearWaitlist;
 
   constructor(options: GearApiOptions = {}) {
     const { types, providerAddress, ...restOptions } = options;
@@ -42,6 +46,15 @@ export class GearApi extends ApiPromise {
       },
       rpc: {
         ...gearRpc,
+      },
+      // it's temporarily necessary to avoid the warning "API/INIT: Not decorating unknown runtime apis: GearApi/1"
+      runtime: {
+        GearApi: [
+          {
+            methods: {},
+            version: 1,
+          },
+        ],
       },
       ...restOptions,
     });
@@ -59,6 +72,7 @@ export class GearApi extends ApiPromise {
       this.claimValueFromMailbox = new GearClaimValue(this);
       this.mailbox = new GearMailbox(this);
       this.code = new GearCode(this);
+      this.waitlist = new GearWaitlist(this);
     });
   }
 
@@ -90,7 +104,7 @@ export class GearApi extends ApiPromise {
    * @returns
    */
   getExtrinsicFailedError(event: Event): RegistryError {
-    const error = event.data[0] as ContractExecResultErr;
+    const error = event.data[0] as SpRuntimeDispatchError;
 
     const { isModule, asModule } = error;
     return isModule ? this.registry.findMetaError(asModule) : null;

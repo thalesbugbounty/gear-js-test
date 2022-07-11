@@ -13,7 +13,7 @@ function useMessage(destination: Hex, metadata: Metadata | undefined) {
 
   const handleEventsStatus = (events: EventRecord[]) => {
     events.forEach(({ event: { method } }) => {
-      if (method === 'DispatchMessageEnqueued') {
+      if (method === 'MessageEnqueued') {
         alert.success('Send message: Finalized');
         // onSucessCallback();
       } else if (method === 'ExtrinsicFailed') {
@@ -44,7 +44,8 @@ function useMessage(destination: Hex, metadata: Metadata | undefined) {
       enableLoading();
 
       const { address, decodedAddress, meta } = account;
-      const gasLimit = await api.program.gasSpent.handle(decodedAddress, destination, payload, value, metadata);
+      const gas = await api.program.calculateGas.handle(decodedAddress, destination, payload, value, false, metadata);
+      const gasLimit = gas.min_limit.toNumber();
 
       const message = { destination, payload, gasLimit, value };
       api.message.submit(message, metadata);

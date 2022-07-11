@@ -1,12 +1,14 @@
-import React, { Dispatch, SetStateAction } from 'react';
-import { useAlert } from 'hooks';
+import { Dispatch, SetStateAction } from 'react';
+import { useAlert } from '@gear-js/react-hooks';
+import { Button, Radio } from '@gear-js/ui';
+
+import styles from './Node.module.scss';
+import { Nodes } from '../../../../../../types';
+
+import { copyToClipboard } from 'helpers';
+import { NODE_API_ADDRESS } from 'context/api/const';
 import copy from 'assets/images/copy.svg';
 import trash from 'assets/images/trash.svg';
-import { Button, Radio } from '@gear-js/ui';
-import { nodeApi } from 'api/initApi';
-import { copyToClipboard } from 'helpers';
-import { Nodes } from '../../../../../../types';
-import styles from './Node.module.scss';
 
 type Props = {
   address: string;
@@ -16,7 +18,7 @@ type Props = {
   setSelectedNode: Dispatch<SetStateAction<string>>;
 };
 
-const Node = ({ address, isCustom, setLocalNodes, selectedNode, setSelectedNode }: Props) => {
+function Node({ address, isCustom, setLocalNodes, selectedNode, setSelectedNode }: Props) {
   const alert = useAlert();
 
   const handleChange = () => {
@@ -31,7 +33,7 @@ const Node = ({ address, isCustom, setLocalNodes, selectedNode, setSelectedNode 
     setLocalNodes((prevNodes) => prevNodes.filter((prevNode) => prevNode.address !== address));
 
     if (selectedNode === address) {
-      setSelectedNode(nodeApi.address);
+      setSelectedNode(NODE_API_ADDRESS);
     }
   };
 
@@ -52,12 +54,12 @@ const Node = ({ address, isCustom, setLocalNodes, selectedNode, setSelectedNode 
             icon={trash}
             color="transparent"
             onClick={removeNode}
-            disabled={address === nodeApi.address}
+            disabled={address === NODE_API_ADDRESS}
           />
         )}
       </div>
     </li>
   );
-};
+}
 
 export { Node };

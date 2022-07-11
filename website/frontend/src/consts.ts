@@ -20,8 +20,8 @@ export const LOCAL_STORAGE = {
   NODE_ADDRESS: 'node_address',
   PUBLIC_KEY_RAW: 'public_key_raw',
   PROGRAM_COMPILE_ID: 'program_compile_id',
-  SAVED_ACCOUNT: 'saved_account',
   EVENT_FILTERS: 'eventFilters',
+  ACCOUNT: 'account',
 };
 
 export const PROGRAM_ERRORS = {
@@ -40,48 +40,22 @@ export const PROGRESS_BAR_STATUSES = {
   COMPLETED: 'COMPLETED',
 };
 
-export const EVENT_TYPES = {
-  PROGRAM_INITIALIZED: 'ProgramInitialized',
-  PROGRAM_INITIALIZATION_FAILURE: 'InitFailure',
-  LOG: 'log',
-};
-
-export const SOCKET_RESULT_STATUSES = {
-  IN_BLOCK: 'InBlock',
-  FINALIZED: 'Finalized',
-  PROGRAM_INITIALIZED: 'ProgramInitialized',
-  SUCCESS: 'Success',
-  LOG: 'Log',
-};
+export enum TransactionStatus {
+  Ready = 'Ready',
+  InBlock = 'InBlock',
+  IsInvalid = 'IsInvalid',
+  Finalized = 'Finalized',
+}
 
 export const RPC_METHODS = {
-  PROGRAM_UPLOAD: 'program.upload',
   PROGRAM_DATA: 'program.data',
   PROGRAMS_ALL: 'program.all',
-  PROGRAMS_USER: 'program.allUser',
-  TOTAL_ISSUANCE: 'system.totalIssuance',
-  SUBSCRIBE_BLOCKS: 'blocks.newBlocks',
-  UNSUBSCRIBE_BLOCKS: 'blocks.unsubscribe',
-  SUBSCRIBE_EVENTS: 'events.subscribe',
-  BALANCE_TRANSFER: 'balance.topUp',
-  SEND_MESSAGE: 'message.send',
-  SEND_META: 'program.addMeta',
-  GET_GAS_SPENT: 'message.gasSpent',
-  GET_PAYLOAD_TYPE: 'message.payloadType',
-  READ_EVENTS: 'events.subscribe',
-  ADD_PUBLIC: 'user.addPublicKey',
+  PROGRAMS_USER: 'program.all.user',
   ADD_METADATA: 'program.meta.add',
   GET_METADATA: 'program.meta.get',
   GET_TEST_BALANCE: 'testBalance.get',
   GET_ALL_MESSAGES: 'message.all',
   GET_MESSAGE: 'message.data',
-};
-
-export const SWITCH_PAGE_TYPES = {
-  UPLOAD_PROGRAM: 'UPLOAD_PROGRAM',
-  UPLOADED_PROGRAMS: 'UPLOADED_PROGRAMS',
-  ALL_PROGRAMS: 'ALL_PROGRAMS',
-  ALL_MESSAGES: 'ALL_MESSAGES',
 };
 
 export const PAGE_TYPES = {
@@ -97,11 +71,6 @@ export const EDITOR_BTNS = {
   BUILD_RUN: 'BUILD_RUN',
 };
 
-export const KEY_TYPES = {
-  MNEMOINIC: 'mnemonic',
-  RAW: 'raw',
-};
-
 export const DEVELOPMENT_CHAIN = 'Development';
 
 export const URL_PARAMS = {
@@ -109,6 +78,7 @@ export const URL_PARAMS = {
   QUERY: 'query',
 };
 
-export enum ZIndexes {
-  'alert' = 999,
-}
+export const FILE_TYPES = {
+  WASM: 'application/wasm',
+  JSON: 'application/json',
+};

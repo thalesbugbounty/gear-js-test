@@ -3,7 +3,7 @@
  * https://jestjs.io/docs/configuration
  */
 
-module.exports = {
+export default {
   // Automatically clear mock calls, instances and results before every test
   clearMocks: true,
 
@@ -18,4 +18,5 @@ module.exports = {
   verbose: true,
   testSequencer: './test/testSequencer.js',
   preset: 'ts-jest/presets/js-with-babel',
+  testTimeout: 15000,
 };

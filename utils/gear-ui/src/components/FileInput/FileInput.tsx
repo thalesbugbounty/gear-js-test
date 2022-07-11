@@ -1,60 +1,73 @@
-import { Button } from '@gear-js/ui';
 import clsx from 'clsx';
-import { InputHTMLAttributes, useRef, MouseEvent, useEffect } from 'react';
+import {
+  InputHTMLAttributes,
+  useRef,
+  MouseEvent,
+  forwardRef,
+  ForwardedRef,
+  useImperativeHandle,
+  useState,
+  ChangeEvent,
+} from 'react';
+import { Button } from '@gear-js/ui';
 import trashSVG from './images/trash.svg';
 import styles from './FileInput.module.scss';
 
-interface Props extends Omit<InputHTMLAttributes<HTMLInputElement>, 'value'> {
-  value: File | undefined;
+interface Props extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
 }
 
-function FileInput({ label, className, value, ...attrs }: Props) {
-  const ref = useRef<HTMLInputElement>(null);
-  const labelClassName = clsx(styles.label, className);
+const FileInput = forwardRef(
+  ({ label, className, onChange, ...attrs }: Props, forwardedRef: ForwardedRef<HTMLInputElement>) => {
+    const [name, setName] = useState('');
+    const ref = useRef<HTMLInputElement>(null);
+    const labelClassName = clsx(styles.label, className);
 
-  const handleButtonClick = () => {
-    ref.current?.click();
-  };
+    // TODO: figure out what's wrong
+    // @ts-ignore
+    useImperativeHandle(forwardedRef, () => ref.current);
 
-  const resetValue = () => {
-    if (ref.current) ref.current.value = '';
-  };
+    const handleButtonClick = () => {
+      ref.current?.click();
+    };
 
-  const handleRemoveButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+    const resetValue = () => {
+      if (ref.current) {
+        ref.current.value = '';
+      }
+    };
 
-    if (ref.current) {
-      resetValue();
-      const changeEvent = new Event('change', { bubbles: true });
-      ref.current.dispatchEvent(changeEvent);
-    }
-  };
+    const handleRemoveButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
 
-  useEffect(() => {
-    if (!value) resetValue();
-  }, [value]);
+      if (ref.current) {
+        resetValue();
+        const changeEvent = new Event('change', { bubbles: true });
+        ref.current.dispatchEvent(changeEvent);
+      }
+    };
 
-  return (
-    <label className={labelClassName}>
-      {label && <span className={styles.text}>{label}</span>}
-      <input type="file" className={styles.input} ref={ref} {...attrs} />
-      {value ? (
-        <span className={styles.file}>
-          <Button
-            text={value.name}
-            color="transparent"
-            size="small"
-            className={styles.name}
-            onClick={handleButtonClick}
-          />
-          <Button icon={trashSVG} color="transparent" onClick={handleRemoveButtonClick} />
-        </span>
-      ) : (
-        <Button text="Select file" color="secondary" size="small" onClick={handleButtonClick} />
-      )}
-    </label>
-  );
-}
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+      setName(e.target.files?.[0]?.name || '');
+
+      if (onChange) onChange(e);
+    };
+
+    return (
+      <label className={labelClassName}>
+        {label && <span className={styles.text}>{label}</span>}
+        <input type="file" className={styles.input} ref={ref} onChange={handleChange} {...attrs} />
+        {name ? (
+          <span className={styles.file}>
+            <Button text={name} color="transparent" size="small" className={styles.name} onClick={handleButtonClick} />
+            <Button icon={trashSVG} color="transparent" onClick={handleRemoveButtonClick} />
+          </span>
+        ) : (
+          <Button text="Select file" color="secondary" size="small" onClick={handleButtonClick} />
+        )}
+      </label>
+    );
+  },
+);
 
 export { FileInput, Props as FileInputProps, styles as fileInputStyles };

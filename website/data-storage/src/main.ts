@@ -1,27 +1,37 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import configuration from './config/configuration';
 import { waitReady } from '@polkadot/wasm-crypto';
-import { HealthcheckModule } from './healthcheck/healthcheck.module';
-import { Logger } from '@nestjs/common';
-import { changeStatus } from './healthcheck/healthcheck.controller';
+import { kafkaLogger } from '@gear-js/common';
 
-const logger = new Logger('Main');
+import { AppModule } from './app.module';
+import configuration from './config/configuration';
+import { changeStatus } from './healthcheck/healthcheck.controller';
+import { dataStorageLogger } from './common/data-storage.logger';
+import { AppDataSource } from './data-source';
 
 async function bootstrap() {
   const { kafka, healthcheck } = configuration();
 
-  const healthCheckApp = await NestFactory.create(HealthcheckModule, { cors: true });
-  logger.log(`HelathCheckApp successfully run on the ${healthcheck.port} 🚀`);
-  await healthCheckApp.listen(healthcheck.port);
+  try {
+    await AppDataSource.initialize();
 
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
+    dataStorageLogger.info('Data Source has been initialized!');
+  } catch (error) {
+    dataStorageLogger.error(`Error during Data Source initialization`);
+    throw error;
+  }
+
+  const app = await NestFactory.create(AppModule, { cors: true });
+  await app.listen(healthcheck.port);
+  dataStorageLogger.info(`HealthCheck app is running on ${healthcheck.port} 🚀`);
+
+  app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.KAFKA,
     options: {
       client: {
         clientId: kafka.clientId,
         brokers: kafka.brokers,
+        logCreator: kafkaLogger,
         sasl: {
           mechanism: 'plain',
           username: kafka.sasl.username,
@@ -33,9 +43,12 @@ async function bootstrap() {
       },
     },
   });
+
+  await app.startAllMicroservices();
+  changeStatus('kafka');
   await waitReady();
   changeStatus('database');
-  await app.listen();
-  changeStatus('kafka');
+
+  await AppDataSource.destroy();
 }
 bootstrap();

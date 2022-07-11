@@ -116,12 +116,19 @@ try {
 
 try {
   await gearApi.program.signAndSend(keyring, (event) => {
-    // or submitted.signAndSend(...)
     console.log(event.toHuman());
   });
 } catch (error) {
   console.error(`${error.name}: ${error.message}`);
 }
+```
+
+#### Check that the address belongs to some program
+
+```javascript
+const programId = '0x0000000000000000000000000000000000000000000000000000000000000000';
+const programExists = await api.program.is(programId);
+console.log(`Program with address ${programId} ${programExists ? 'exists' : "doesn't exist"}`);
 ```
 
 ### Send message
@@ -192,27 +199,45 @@ gearApi.code.signAndSend(alice, () => {
 });
 ```
 
-### Get gasSpent
+### Get transaction fee
 
-#### For init message
+```javascript
+const api = await GearApi.create();
+api.program.submit({ code, gasLimit });
+// same for api.message, api.reply and others
+const paymentInfo = await api.program.paymentInfo(alice);
+const transactionFee = paymentInfo.partialFee.toNumber();
+consolg.log(transactionFee);
+```
+
+### Calculate gas for messages
+
+Gas calculation returns GasInfo object contains 3 parameters:
+
+- `min_limit` - Minimum gas limit required for execution
+- `reserved` - Gas amount that will be reserved for some other on-chain interactions
+- `burned` - Number of gas burned during message processing
+
+#### Init
 
 ```javascript
 const code = fs.readFileSync('demo_ping.opt.wasm');
-const gas = await gearApi.program.gasSpent.init(
+const gas = await gearApi.program.calculateGas.init(
   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d', // source id
   code,
   '0x00', // payload
   0, //value
+  true, // allow other panics
 );
 console.log(gas.toHuman());
 ```
 
-#### For handle message
+#### Handle
 
 ```javascript
 const code = fs.readFileSync('demo_meta.opt.wasm');
 const meta = await getWasmMetadata(fs.readFileSync('demo_meta.opt.wasm'));
-const gas = await gearApi.program.gasSpent.handle(
+const gas = await gearApi.program.calculateGas.handle(
   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d', // source id
   '0xa178362715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d', //program id
   {
@@ -222,22 +247,24 @@ const gas = await gearApi.program.gasSpent.handle(
     },
   }, // payload
   0, // value
+  false, // allow other panics
   meta,
 );
 console.log(gas.toHuman());
 ```
 
-#### For reply message
+#### Reply
 
 ```javascript
 const code = fs.readFileSync('demo_async.opt.wasm');
 const meta = await getWasmMetadata(fs.readFileSync('demo_async.opt.wasm'));
-const gas = await gearApi.program.gasSpent.reply(
+const gas = await gearApi.program.calculateGas.reply(
   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d', // source id
   '0x518e6bc03d274aadb3454f566f634bc2b6aef9ae6faeb832c18ae8300fd72635', // message id
   0, // exit code
   'PONG', // payload
   0, // value
+  true, // allow other panics
   meta,
 );
 console.log(gas.toHuman());
@@ -270,9 +297,20 @@ const submitted = await api.mailbox.claimValue.submit(messageId);
 await api.mailbox.claimValue.signAndSend(...);
 ```
 
+### Waitlist
+
+#### Read
+
+```javascript
+const gearApi = await GearApi.create();
+const programId = '0x1234...';
+const waitlist = await api.waitlist.read(programId);
+console.log(waitlist);
+```
+
 ### Subscribe to events
 
-Subscribe to all events
+#### Subscribe to all events
 
 ```javascript
 const unsub = await gearApi.query.system.events((events) => {
@@ -282,12 +320,12 @@ const unsub = await gearApi.query.system.events((events) => {
 unsub();
 ```
 
-Check what the event is
+#### Check what the event is
 
 ```javascript
 gearApi.query.system.events((events) => {
   events
-    .filter(({ event }) => gearApi.events.gear.InitMessageEnqueued.is(event))
+    .filter(({ event }) => gearApi.events.gear.MessageEnqueued.is(event))
     .forEach(({ event: { data } }) => {
       console.log(data.toHuman());
     });
@@ -300,13 +338,20 @@ gearApi.query.system.events((events) => {
 });
 ```
 
-Subscribe to Log events
+#### Subscribe to specific gear events
+
+- Subscribe to messages from program
 
 ```javascript
-const unsub = await gearApi.gearEvents.subscribeLogEvents(
-  ({ data: { id, source, destination, payload, value, reply } }) => {
+const unsub = api.gearEvents.subscribeToGearEvent(
+  'UserMessageSent',
+  ({
+    data: {
+      message: { id, source, destination, payload, value, reply },
+    },
+  }) => {
     console.log(`
-  logId: ${id.toHex()}
+  messageId: ${id.toHex()}
   source: ${source.toHex()}
   payload: ${payload.toHuman()}
   `);
@@ -316,13 +361,16 @@ const unsub = await gearApi.gearEvents.subscribeLogEvents(
 unsub();
 ```
 
-Subscribe to Program events
+- Subscribe to messages to program
 
 ```javascript
-const unsub = await gearApi.gearEvents.subscribeProgramEvents(({ method, data: { info, reason } }) => {
-  console.log(method);
-  console.log(`ProgramId: ${info.programId}`);
-  reason && console.log(`Reason: ${reason.isDispatch ? reason.asDispatch.toHuman() : 'unknown'}`);
+const unsub = api.gearEvents.subscribeToGearEvent('MessageEnqueued', ({ data: { id, source, destination, entry } }) => {
+  console.log({
+    messageId: id.toHex(),
+    programId: destination.toHex(),
+    userId: source.toHex(),
+    entry: entry.isInit ? entry.asInit : entry.isHandle ? entry.asHandle : entry.asReply,
+  });
 });
 // Unsubscribe
 unsub();
@@ -331,12 +379,12 @@ unsub();
 Subscribe to Transfer events
 
 ```javascript
-const unsub = await gearApi.gearEvents.subscribeTransferEvents(({ data: { from, to, value } }) => {
+const unsub = await gearApi.gearEvents.subscribeToTransferEvents(({ data: { from, to, amount } }) => {
   console.log(`
     Transfer balance:
     from: ${from.toHex()}
     to: ${to.toHex()}
-    value: ${+value.toString()}
+    amount: ${+amount.toString()}
     `);
 });
 // Unsubscribe

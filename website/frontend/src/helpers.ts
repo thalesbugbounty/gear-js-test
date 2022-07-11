@@ -1,20 +1,33 @@
-import { Hex } from '@gear-js/api';
-import { Metadata } from '@polkadot/types';
-import { AlertContainerFactory } from "context/alert/types"
-import { localPrograms } from 'services/LocalDBService';
-import { GetMetaResponse } from 'api/responses';
-import { DEVELOPMENT_CHAIN, LOCAL_STORAGE } from 'consts';
-import { NODE_ADDRESS_REGEX } from 'regexes';
-import { InitialValues as SendMessageInitialValues } from './components/pages/Send/children/MessageForm/types';
-import { FormValues as UploadInitialValues } from './components/pages/Programs/children/Upload/children/UploadForm/types';
-import { SetFieldValue } from 'types/common';
-import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
+import { Hex, GearApi, Metadata } from '@gear-js/api';
+import { Event } from '@polkadot/types/interfaces';
+import isString from 'lodash.isstring';
+import isPlainObject from 'lodash.isplainobject';
+import { GasInfo } from '@gear-js/api/lib/types/gear-core';
+import { AlertContainerFactory } from '@gear-js/react-hooks';
 
-export const fileNameHandler = (filename: string) => {
+import { NODE_ADDRESS_REGEX } from 'regexes';
+import { DEVELOPMENT_CHAIN, LOCAL_STORAGE, FILE_TYPES } from 'consts';
+import { localPrograms } from 'services/LocalDBService';
+import { GetMetaResponse } from 'types/api';
+import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
+import { getSubmitPayload } from 'components/common/Form/FormPayload/helpers';
+import { FormValues as SendMessageInitialValues } from 'pages/Send/children/MessageForm/types';
+import { FormValues as UploadInitialValues } from 'pages/Programs/children/Upload/children/UploadForm/types';
+
+export const getExtrinsicFailedMessage = (api: GearApi, event: Event) => {
+  const { docs, method: errorMethod } = api.getExtrinsicFailedError(event);
+  const formattedDocs = docs.filter(Boolean).join('. ');
+
+  return `${errorMethod}: ${formattedDocs}`;
+};
+
+export const fileNameHandler = (filename: string, maxLength = 24) => {
   const transformedFileName = filename;
 
-  return transformedFileName.length > 24
-    ? `${transformedFileName.slice(0, 12)}…${transformedFileName.slice(-12)}`
+  const halfLenght = Math.floor(maxLength / 2);
+
+  return transformedFileName.length > maxLength
+    ? `${transformedFileName.slice(0, halfLenght)}…${transformedFileName.slice(-halfLenght)}`
     : transformedFileName;
 };
 
@@ -26,6 +39,21 @@ export const formatDate = (rawDate: string) => {
 };
 
 export const generateRandomId = () => Math.floor(Math.random() * 1000000000);
+
+export const readTextFileAsync = (file: File): Promise<string | null> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const result = reader.result as string | null;
+
+      resolve(result);
+    };
+
+    reader.onerror = reject;
+
+    reader.readAsText(file);
+  });
 
 export function readFileAsync(file: File) {
   return new Promise((resolve, reject) => {
@@ -40,12 +68,6 @@ export function readFileAsync(file: File) {
     reader.readAsArrayBuffer(file);
   });
 }
-
-export const toShortAddress = (_address: string) => {
-  const address = (_address || '').toString();
-
-  return address.length > 13 ? `${address.slice(0, 6)}…${address.slice(-6)}` : address;
-};
 
 export const copyToClipboard = (key: string, alert: any, successfulText?: string) => {
   try {
@@ -145,84 +167,91 @@ export const isDevChain = () => localStorage.getItem(LOCAL_STORAGE.CHAIN) === DE
 
 export const isNodeAddressValid = (address: string) => NODE_ADDRESS_REGEX.test(address);
 
-export const checkFileFormat = (file: File) => {
-  const fileExt = file.name.split('.').pop()?.toLowerCase();
+export const checkFileFormat = (file: File, types: string | string[] = FILE_TYPES.WASM) => {
+  if (Array.isArray(types)) {
+    return types.some((type) => type === file.type);
+  }
 
-  return fileExt === 'wasm';
+  return types === file.type;
 };
 
 export const getPreformattedText = (data: unknown) => JSON.stringify(data, null, 4);
 
 export const calculateGas = async (
   method: string,
-  api: any,
-  isManualPayload: boolean,
+  api: GearApi,
   values: UploadInitialValues | SendMessageInitialValues,
-  setFieldValue: SetFieldValue,
   alert: AlertContainerFactory,
-  meta: any,
+  meta?: Metadata,
   code?: Uint8Array | null,
-  addressId?: String | null,
-  replyCodeError?: string
-) => {
-  const payload = isManualPayload ? values.payload : values.__root;
-
-  if (isManualPayload && payload === '') {
-    alert.error(`Error: payload can't be empty`);
-    return;
-  }
-
-  if (!isManualPayload && payload && Object.keys(payload).length === 0) {
-    alert.error(`Error: form can't be empty`);
-    return;
-  }
+  addressId?: string
+): Promise<number> => {
+  const payload = getSubmitPayload(values.payload);
 
   try {
-    const { value } = values;
-    const metaOrTypeOfPayload: Metadata | string = meta || 'String';
+    if (isString(payload) && payload === '') {
+      throw new Error("payload can't be empty");
+    }
 
-    let estimatedGas;
+    if (isPlainObject(payload) && Object.keys(payload as object).length === 0) {
+      throw new Error(`form can't be empty`);
+    }
+
+    const { value } = values;
+    const metaOrTypeOfPayload = meta || values.payloadType;
+
+    let estimatedGas: GasInfo;
 
     switch (method) {
       case 'init':
-        estimatedGas = await api.program.gasSpent.init(
+        estimatedGas = await api.program.calculateGas.init(
           localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
-          code,
+          code as Buffer,
           payload,
           value,
+          true,
           metaOrTypeOfPayload
         );
         break;
       case 'handle':
-        estimatedGas = await api.program.gasSpent.handle(
+        estimatedGas = await api.program.calculateGas.handle(
           localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
-          addressId,
+          addressId as Hex,
           payload,
           value,
+          true,
           metaOrTypeOfPayload
         );
         break;
       case 'reply':
-        estimatedGas = await api.program.gasSpent.reply(
+        estimatedGas = await api.program.calculateGas.reply(
           localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
-          addressId,
-          Number(replyCodeError),
+          addressId as Hex,
+          0,
           payload,
           value,
+          true,
           metaOrTypeOfPayload
         );
         break;
+      default:
+        throw new Error('Unknown method');
     }
 
-    alert.info(`Estimated gas ${estimatedGas.toHuman()}`);
-    setFieldValue('gasLimit', estimatedGas.toNumber());
+    const minLimit = estimatedGas.min_limit.toNumber();
+
+    alert.info(`Estimated gas ${minLimit}`);
+
+    return minLimit;
   } catch (error) {
-    alert.error(`${error}`);
+    alert.error(String(error));
+
+    return Promise.reject(error);
   }
 };
 
 export const isHex = (value: unknown) => {
-  const isString = typeof value === 'string';
   const hexRegex = /^0x[\da-fA-F]+/;
-  return isString && hexRegex.test(value);
+
+  return isString(value) && hexRegex.test(value);
 };

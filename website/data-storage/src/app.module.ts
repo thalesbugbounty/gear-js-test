@@ -1,13 +1,18 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+
 import { ConsumerModule } from './consumer/consumer.module';
-import { MessagesModule } from './messages/messages.module';
+import { MessageModule } from './message/message.module';
 import { MetadataModule } from './metadata/metadata.module';
-import { ProgramsModule } from './programs/programs.module';
+import { ProgramModule } from './program/program.module';
+import { CodeModule } from './code/code.module';
 import { HealthcheckController } from './healthcheck/healthcheck.controller';
 import { HealthcheckModule } from './healthcheck/healthcheck.module';
 import configurations from './config/configuration';
+import { Code, Message, Meta, Program } from './database/entities';
+
+const entities = [Meta, Message, Program, Code];
 
 @Module({
   imports: [
@@ -23,17 +28,17 @@ import configurations from './config/configuration';
         username: configService.get('database.user'),
         password: configService.get('database.password'),
         database: configService.get('database.name'),
-        autoLoadEntities: true,
-        synchronize: true,
-        entities: ['dist/**/*.entity.js'],
+        synchronize: false,
+        entities,
       }),
       inject: [ConfigService],
     }),
     ConsumerModule,
-    ProgramsModule,
-    MessagesModule,
+    ProgramModule,
+    MessageModule,
     MetadataModule,
     HealthcheckModule,
+    CodeModule,
   ],
   controllers: [HealthcheckController],
 })

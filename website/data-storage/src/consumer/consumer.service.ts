@@ -1,92 +1,107 @@
 import { Injectable } from '@nestjs/common';
-import { MessagesService } from 'src/messages/messages.service';
-import { MetadataService } from 'src/metadata/metadata.service';
-import { ProgramsService } from 'src/programs/programs.service';
-import { Result } from './types';
 import {
   AddMetaParams,
   AddMetaResult,
-  AddPayloadParams,
   AllMessagesResult,
+  CODE_STATUS,
   FindMessageParams,
   FindProgramParams,
+  GetAllCodeParams,
+  GetAllCodeResult,
   GetAllProgramsParams,
   GetAllProgramsResult,
+  GetAllUserProgramsParams,
+  GetCodeParams,
   GetMessagesParams,
   GetMetaParams,
   GetMetaResult,
-  IMessage,
-  IProgram,
-  MessageDispatched,
-  InitStatus,
-  Log,
-  InitMessageEnqueued,
-  DispatchMessageEnqueud,
-  InitSuccess,
-  InitFailure,
-  GetAllUserProgramsParams,
+  ICode,
+  ICodeChangedKafkaValue,
   IGenesis,
+  IMessage,
+  IMessageEnqueuedKafkaValue,
+  IMessagesDispatchedKafkaValue,
+  InitStatus,
+  IProgramChangedKafkaValue,
+  IUserMessageSentKafkaValue,
   ProgramDataResult,
-} from '@gear-js/interfaces';
-import { FormResponse } from 'src/middleware/formResponse';
+} from '@gear-js/common';
+
+import { Result } from './types';
+import { ProgramService } from '../program/program.service';
+import { MessageService } from '../message/message.service';
+import { MetadataService } from '../metadata/metadata.service';
+import { FormResponse } from '../middleware/formResponse';
+import { CodeService } from '../code/code.service';
+import { UpdateCodeInput } from '../code/types';
+import { sleep } from '../utils/sleep';
 
 @Injectable()
 export class ConsumerService {
   constructor(
-    private readonly programService: ProgramsService,
-    private readonly messageService: MessagesService,
-    private readonly metaService: MetadataService,
+    private programService: ProgramService,
+    private messageService: MessageService,
+    private metaService: MetadataService,
+    private codeService: CodeService,
   ) {}
 
   events = {
-    Log: (value: Log) => {
-      this.messageService.save(value);
+    UserMessageSent: async (value: IUserMessageSentKafkaValue) => {
+      await sleep(1000);
+      this.messageService.createMessage(value);
     },
-    InitMessageEnqueued: async (value: InitMessageEnqueued) => {
-      await this.programService.save({
-        id: value.programId,
-        owner: value.origin,
-        genesis: value.genesis,
-        timestamp: value.timestamp,
-        blockHash: value.blockHash,
-      });
-      this.messageService.save({
-        id: value.messageId,
-        destination: value.programId,
-        source: value.origin,
+    MessageEnqueued: ({
+      id,
+      destination,
+      source,
+      entry,
+      genesis,
+      timestamp,
+      blockHash,
+    }: IMessageEnqueuedKafkaValue) => {
+      if (entry === 'Init') {
+        this.programService.createProgram({
+          id: destination,
+          owner: source,
+          genesis: genesis,
+          timestamp: timestamp,
+          blockHash: blockHash,
+        });
+      }
+      this.messageService.createMessage({
+        id: id,
+        destination: destination,
+        source: source,
+        entry,
         payload: null,
-        replyTo: null,
-        replyError: null,
-        genesis: value.genesis,
-        blockHash: value.blockHash,
-        timestamp: value.timestamp,
+        replyToMessageId: null,
+        exitCode: null,
+        genesis: genesis,
+        blockHash: blockHash,
+        timestamp: timestamp,
       });
     },
-    DispatchMessageEnqueued: (value: DispatchMessageEnqueud) => {
-      this.messageService.save({
-        genesis: value.genesis,
-        id: value.messageId,
-        destination: value.programId,
-        source: value.origin,
-        blockHash: value.blockHash,
-        timestamp: value.timestamp,
-        payload: null,
-        replyTo: null,
-        replyError: null,
-      });
+    ProgramChanged: (value: IProgramChangedKafkaValue) => {
+      if (value.isActive) {
+        this.programService.setStatus(value.id, value.genesis, InitStatus.SUCCESS);
+      }
     },
-    InitSuccess: (value: InitSuccess) => {
-      this.programService.setStatus(value.programId, value.genesis, InitStatus.SUCCESS);
+    CodeChanged: (value: ICodeChangedKafkaValue) => {
+      const updateCodeInput: UpdateCodeInput = {
+        ...value,
+        status: value.change as CODE_STATUS,
+      };
+      this.codeService.updateCode(updateCodeInput);
     },
-    InitFailure: (value: InitFailure) => {
-      this.programService.setStatus(value.programId, value.genesis, InitStatus.FAILED);
-    },
-    MessageDispatched: (value: MessageDispatched) => {
+    MessagesDispatched: (value: IMessagesDispatchedKafkaValue) => {
       this.messageService.setDispatchedStatus(value);
     },
-    DatabaseWiped: (value: IGenesis) => {
-      this.messageService.deleteRecords(value.genesis);
-      this.programService.deleteRecords(value.genesis);
+    DatabaseWiped: async (value: IGenesis) => {
+      await Promise.all([
+        this.messageService.deleteRecords(value.genesis),
+        this.programService.deleteRecords(value.genesis),
+        this.codeService.deleteRecords(value.genesis),
+      ]);
     },
   };
 
@@ -119,23 +134,22 @@ export class ConsumerService {
   }
 
   @FormResponse
-  async addPayload(params: AddPayloadParams): Result<IMessage> {
-    return await this.messageService.addPayload(params);
-  }
-
-  @FormResponse
   async allMessages(params: GetMessagesParams): Result<AllMessagesResult> {
-    if (params.destination && params.source) {
-      return await this.messageService.getAllMessages(params);
-    }
-    if (params.destination) {
-      return await this.messageService.getIncoming(params);
-    }
-    return await this.messageService.getOutgoing(params);
+    return await this.messageService.getAllMessages(params);
   }
 
   @FormResponse
   async message(params: FindMessageParams): Result<IMessage> {
     return await this.messageService.getMessage(params);
+  }
+
+  @FormResponse
+  async allCode(params: GetAllCodeParams): Result<GetAllCodeResult> {
+    return await this.codeService.getAllCode(params);
+  }
+
+  @FormResponse
+  async code(params: GetCodeParams): Result<ICode> {
+    return await this.codeService.getByIdAndGenesis(params);
   }
 }

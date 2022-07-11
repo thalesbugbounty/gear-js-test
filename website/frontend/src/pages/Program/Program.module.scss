@@ -1,0 +1,12 @@
+@use '@gear-js/ui/variables' as *;
+
+.messages {
+  margin: 40px 0;
+
+  .messagesCaption {
+    text-transform: uppercase;
+    color: $textColor;
+    font-size: $fontSizeLarge;
+    margin: 30px 0;
+  }
+}

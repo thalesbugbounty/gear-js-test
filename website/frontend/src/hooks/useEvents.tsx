@@ -1,6 +1,9 @@
 import { useState } from 'react';
+import { useApi } from '@gear-js/react-hooks';
+
+// eslint-disable-next-line import/no-cycle
+import { useSubscription } from '.';
 import { IdeaEvent, IdeaEvents, Sections } from 'types/explorer';
-import { useApi, useSubscription } from '.';
 
 export function useEvents() {
   const { api } = useApi();

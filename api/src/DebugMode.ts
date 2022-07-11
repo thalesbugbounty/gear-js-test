@@ -1,9 +1,11 @@
-import { UnsubscribePromise } from '@polkadot/api/types';
+import { SubmittableExtrinsic, UnsubscribePromise } from '@polkadot/api/types';
+import { ISubmittableResult } from '@polkadot/types/types';
+
 import { GearTransaction } from './Transaction';
-import { DebugDataSnapshotEvent } from './events-types';
+import { DebugDataSnapshot } from './events';
 
 export class DebugMode extends GearTransaction {
-  enabled: any;
+  enabled: SubmittableExtrinsic<'promise', ISubmittableResult>;
 
   enable() {
     this.enabled = this.api.tx.sudo.sudo(this.api.tx.gearDebug.enableDebugMode(true));
@@ -13,11 +15,11 @@ export class DebugMode extends GearTransaction {
     this.enabled = this.api.tx.sudo.sudo(this.api.tx.gearDebug.enableDebugMode(false));
   }
 
-  snapshots(callback: (event: DebugDataSnapshotEvent) => void | Promise<void>): UnsubscribePromise {
+  snapshots(callback: (event: DebugDataSnapshot) => void | Promise<void>): UnsubscribePromise {
     return this.api.query.system.events((events) => {
       events
         .filter(({ event }) => this.api.events.gearDebug.DebugDataSnapshot.is(event))
-        .forEach(({ event }) => callback(new DebugDataSnapshotEvent(event)));
+        .forEach(({ event }) => callback(event as DebugDataSnapshot));
     });
   }
 }

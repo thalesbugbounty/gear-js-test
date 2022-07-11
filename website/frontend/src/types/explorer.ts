@@ -1,15 +1,16 @@
-import { GearEvent } from '@gear-js/api';
-import { Compact, Vec } from '@polkadot/types';
-import { BlockNumber, Event as DotEvent } from '@polkadot/types/interfaces';
+import { Compact, Vec, GenericEvent } from '@polkadot/types';
 import { FrameSystemEventRecord } from '@polkadot/types/lookup';
+import { BlockNumber, Event as DotEvent } from '@polkadot/types/interfaces';
+
 import { generateRandomId } from 'helpers';
 
-export class IdeaEvent extends GearEvent {
+export class IdeaEvent extends GenericEvent {
   constructor(event: DotEvent, blockNumber?: Compact<BlockNumber>) {
     const { section, method, meta, hash } = event;
     const { docs } = meta;
 
-    super(event);
+    super(event.registry, event.toU8a());
+
     this._id = `${hash}-${generateRandomId()}`;
     this._caption = `${section}.${method}`;
     this._description = String(docs.toHuman());
@@ -55,15 +56,15 @@ export enum Sections {
   SYSTEM = 'system',
 }
 
-export enum Methods {
-  TRANSFER = 'Transfer',
-  LOG = 'Log',
-  INIT_SUCCESS = 'InitSuccess',
-  INIT_FAILURE = 'InitFailure',
-  DISPATCH_MESSAGE_ENQUEUED = 'DispatchMessageEnqueued',
-  MESSAGE_DISPATCHED = 'MessageDispatched',
-  EXTRINSIC_FAILED = 'ExtrinsicFailed',
-  EXTRINSIC_SUCCESS = 'ExtrinsicSuccess',
+export enum Method {
+  Transfer = 'Transfer',
+  CodeSaved = 'CodeSaved',
+  ProgramChanged = 'ProgramChanged',
+  UserMessageSent = 'UserMessageSent',
+  MessageEnqueued = 'MessageEnqueued',
+  MessagesDispatched = 'MessagesDispatched',
+  ExtrinsicFailed = 'ExtrinsicFailed',
+  ExtrinsicSuccess = 'ExtrinsicSuccess',
 }
 
 export type EventRecords = Vec<FrameSystemEventRecord>;

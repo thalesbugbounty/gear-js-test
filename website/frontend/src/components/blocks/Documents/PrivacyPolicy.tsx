@@ -1,4 +1,6 @@
-import React, { VFC } from 'react';
+import { VFC } from 'react';
+
+import './Document.scss';
 
 export const PrivacyPolicy: VFC = () => (
   <div className="document">

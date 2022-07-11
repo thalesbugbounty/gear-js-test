@@ -1,6 +1,6 @@
-import { UnsubscribePromise } from '@polkadot/api/types';
 import { useEffect } from 'react';
-import { useApi } from '.';
+import { UnsubscribePromise } from '@polkadot/api/types';
+import { useApi } from '@gear-js/react-hooks';
 
 export function useSubscription(callback: () => UnsubscribePromise) {
   const { api } = useApi();

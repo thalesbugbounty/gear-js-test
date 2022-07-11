@@ -1,13 +1,11 @@
+import { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
-import React from 'react';
-import { App } from './components/App/App';
 
-async function init() {
-  try {
-    ReactDOM.render(<App />, document.getElementById('root'));
-  } catch (err) {
-    console.log(err);
-  }
-}
+import { App } from 'app';
 
-init().catch((err) => console.error(err));
+ReactDOM.render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+  document.getElementById('root')
+);
