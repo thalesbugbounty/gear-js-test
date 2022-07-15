@@ -18,6 +18,7 @@ import 'assets/scss/index.scss';
 import { Meta } from 'pages/Meta/Meta';
 import { Send } from 'pages/Send/Send';
 import { State } from 'pages/State';
+import { SendMessage } from 'pages/SendMessage';
 import { EditorPage } from 'pages/Editor';
 import { Programs } from 'pages/Programs/Programs';
 import { Program } from 'pages/Program/Program';
@@ -86,6 +87,7 @@ const Component = () => {
               <Route path={routes.sendMessage} element={<Send />} />
               <Route path={routes.reply} element={<Send />} />
             </Route>
+            <Route path={routes.testRoute} element={<SendMessage />} />
             <Route path={routes.meta} element={<Meta />} />
             <Route path={routes.editor} element={<EditorPage />} />
             <Route path={routes.mailbox} element={<Mailbox />} />
