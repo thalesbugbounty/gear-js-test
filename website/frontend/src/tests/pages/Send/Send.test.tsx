@@ -240,7 +240,6 @@ describe('send message page tests', () => {
       payload: '12345',
       gasLimit: 30000000,
       payloadType: 'u16',
-      destination: 'program',
     };
 
     // calculate gas
@@ -378,7 +377,6 @@ describe('send message page tests', () => {
       payload: getPayloadValue(typeStructure),
       gasLimit: 30000000,
       payloadType: 'Bytes',
-      destination: 'program',
     };
 
     // calculate gas
@@ -473,7 +471,6 @@ describe('send message page tests', () => {
       payload: '12345',
       gasLimit: 30000000,
       payloadType: 'u16',
-      destination: MESSAGE_ID_2,
     };
 
     // calculate gas
@@ -556,7 +553,6 @@ describe('send message page tests', () => {
       payload: getPayloadValue(typeStructure),
       gasLimit: 30000000,
       payloadType: 'Bytes',
-      destination: MESSAGE_ID_1,
     };
 
     // calculate gas
