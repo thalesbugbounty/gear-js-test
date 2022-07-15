@@ -11,11 +11,13 @@ import { useCodeUpload } from './useCodeUpload';
 import { useSendMessage } from './useMessageSend';
 import { useProgramUpload } from './useProgramUplaod';
 import { useClaimMessage } from './useClaimMessage';
+
 import { useAccountSubscriptions } from './useAccountSubscriptions';
 
 const useBlocks = () => useContext(BlocksContext);
 const useEditor = () => useContext(EditorContext);
 
+export { useGasCalculate } from './useGasCalculate';
 export {
   useBlocks,
   useEditor,

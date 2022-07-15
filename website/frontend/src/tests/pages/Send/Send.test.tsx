@@ -3,10 +3,9 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { screen, render, fireEvent, waitFor } from '@testing-library/react';
 import { AccountProvider } from '@gear-js/react-hooks';
 
-import { useAccountMock, useApiMock, TEST_API, TEST_ACCOUNT } from '../../mocks/hooks';
+import { useAccountMock, useApiMock, useGasCalculateMock, TEST_API, TEST_ACCOUNT } from '../../mocks/hooks';
 import { META, REPLY_META, PROGRAM_ID_1, PROGRAM_ID_2, MESSAGE_ID_1, MESSAGE_ID_2 } from '../../const';
 
-import * as helpers from 'helpers';
 import { ApiProvider } from 'context/api';
 import { AlertProvider } from 'context/alert';
 import { Send } from 'pages/Send/Send';
@@ -78,8 +77,7 @@ describe('send message page tests', () => {
 
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT);
-
-    const calculateGas = jest.spyOn(helpers, 'calculateGas').mockResolvedValue(2400000);
+    const { calculateGasMock } = useGasCalculateMock(2400000);
 
     render(<SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID_2}`]} />);
 
@@ -248,8 +246,8 @@ describe('send message page tests', () => {
     // calculate gas
     fireEvent.click(calculateGasBtn);
 
-    await waitFor(() => expect(calculateGas).toBeCalledTimes(1));
-    expect(calculateGas).toBeCalledWith(
+    await waitFor(() => expect(calculateGasMock).toBeCalledTimes(1));
+    expect(calculateGasMock).toBeCalledWith(
       'handle',
       TEST_API,
       formValues,
@@ -275,8 +273,7 @@ describe('send message page tests', () => {
 
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT);
-
-    const calculateGas = jest.spyOn(helpers, 'calculateGas').mockResolvedValue(2400000);
+    const { calculateGasMock } = useGasCalculateMock(2400000);
 
     render(<SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID_1}`]} />);
 
@@ -390,8 +387,16 @@ describe('send message page tests', () => {
 
     await waitFor(() => expect(gasLimitField).toHaveValue('2,400,000'));
 
-    expect(calculateGas).toBeCalledTimes(1);
-    expect(calculateGas).toBeCalledWith('handle', TEST_API, formValues, expect.any(Object), META, null, PROGRAM_ID_1);
+    expect(calculateGasMock).toBeCalledTimes(1);
+    expect(calculateGasMock).toBeCalledWith(
+      'handle',
+      TEST_API,
+      formValues,
+      expect.any(Object),
+      META,
+      null,
+      PROGRAM_ID_1
+    );
 
     // authorized submit
 
@@ -409,8 +414,7 @@ describe('send message page tests', () => {
 
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT);
-
-    const calculateGas = jest.spyOn(helpers, 'calculateGas').mockResolvedValue(2400000);
+    const { calculateGasMock } = useGasCalculateMock(2400000);
 
     render(<SendMessagePage path="/send/reply/:messageId" initialEntries={[`/send/reply/${MESSAGE_ID_2}`]} />);
 
@@ -478,8 +482,8 @@ describe('send message page tests', () => {
 
     await waitFor(() => expect(gasLimitField).toHaveValue('2,400,000'));
 
-    expect(calculateGas).toBeCalledTimes(1);
-    expect(calculateGas).toBeCalledWith(
+    expect(calculateGasMock).toBeCalledTimes(1);
+    expect(calculateGasMock).toBeCalledWith(
       'reply',
       TEST_API,
       formValues,
@@ -505,8 +509,7 @@ describe('send message page tests', () => {
 
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT);
-
-    const calculateGas = jest.spyOn(helpers, 'calculateGas').mockResolvedValue(2400000);
+    const { calculateGasMock } = useGasCalculateMock(2400000);
 
     render(<SendMessagePage path="/reply/message/:messageId" initialEntries={[`/reply/message/${MESSAGE_ID_1}`]} />);
 
@@ -562,8 +565,8 @@ describe('send message page tests', () => {
 
     await waitFor(() => expect(gasLimitField).toHaveValue('2,400,000'));
 
-    expect(calculateGas).toBeCalledTimes(1);
-    expect(calculateGas).toBeCalledWith(
+    expect(calculateGasMock).toBeCalledTimes(1);
+    expect(calculateGasMock).toBeCalledWith(
       'reply',
       TEST_API,
       formValues,
