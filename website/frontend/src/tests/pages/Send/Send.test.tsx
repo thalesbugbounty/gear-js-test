@@ -90,10 +90,15 @@ describe('send message page tests', () => {
 
     // checking if fields are present in a form
 
+    const destination = screen.getByText('Destination');
+    const destinationValue = screen.getByText(PROGRAM_ID_2);
+
+    expect(destination).toBeInTheDocument();
+    expect(destinationValue).toBeInTheDocument();
+
     const valueField = screen.getByLabelText('Value');
     const payloadField = screen.getByLabelText('Payload');
     const gasLimitField = screen.getByLabelText('Gas limit');
-    const destinationField = screen.getByLabelText('Destination');
     const payloadTypeField = screen.getByLabelText('Payload type');
     const payloadTypeSwitch = screen.getByLabelText('Enter type');
 
@@ -103,7 +108,6 @@ describe('send message page tests', () => {
     expect(valueField).toBeInTheDocument();
     expect(payloadField).toBeInTheDocument();
     expect(gasLimitField).toBeInTheDocument();
-    expect(destinationField).toBeInTheDocument();
 
     expect(payloadTypeField).toBeDisabled();
     expect(payloadTypeField).toBeInTheDocument();
@@ -202,23 +206,6 @@ describe('send message page tests', () => {
 
     checkBtnEnabled();
 
-    // validate destination field
-
-    changeFieldValue(destinationField, '');
-
-    const destinationFieldError = await screen.findByText('This field is required');
-
-    expect(destinationField).toHaveValue('');
-    expect(destinationFieldError).toBeInTheDocument();
-
-    checkBtnDisabled();
-
-    changeFieldValue(destinationField, 'program');
-
-    await waitFor(expect(destinationFieldError).not.toBeInTheDocument);
-
-    checkBtnEnabled();
-
     // validate payload type field
 
     changeFieldValue(payloadTypeField, '');
@@ -246,15 +233,7 @@ describe('send message page tests', () => {
     fireEvent.click(calculateGasBtn);
 
     await waitFor(() => expect(calculateGasMock).toBeCalledTimes(1));
-    expect(calculateGasMock).toBeCalledWith(
-      'handle',
-      TEST_API,
-      formValues,
-      expect.any(Object),
-      undefined,
-      null,
-      PROGRAM_ID_2
-    );
+    expect(calculateGasMock).toBeCalledWith('handle', formValues, null, undefined, PROGRAM_ID_2);
 
     // authorized submit
 
@@ -285,9 +264,14 @@ describe('send message page tests', () => {
 
     // checking if fields are present in a form
 
+    const destination = screen.getByText('Destination');
+    const destinationValue = screen.getByText(PROGRAM_ID_1);
+
+    expect(destination).toBeInTheDocument();
+    expect(destinationValue).toBeInTheDocument();
+
     const valueField = screen.getByLabelText('Value');
     const gasLimitField = screen.getByLabelText('Gas limit');
-    const destinationField = screen.getByLabelText('Destination');
     const payloadTypeField = screen.queryByLabelText('Payload type');
     const payloadTypeSwitch = screen.queryByLabelText('Enter type');
 
@@ -298,7 +282,6 @@ describe('send message page tests', () => {
 
     expect(valueField).toBeInTheDocument();
     expect(gasLimitField).toBeInTheDocument();
-    expect(destinationField).toBeInTheDocument();
 
     expect(payloadTypeField).not.toBeInTheDocument();
     expect(payloadTypeSwitch).not.toBeInTheDocument();
@@ -366,9 +349,6 @@ describe('send message page tests', () => {
     changeFieldValue(gasLimitField, '30000000');
     expect(gasLimitField).toHaveValue('30,000,000');
 
-    changeFieldValue(destinationField, 'program');
-    expect(destinationField).toHaveValue('program');
-
     const decodedTypes = decodeHexTypes(META.types!);
     const typeStructure = createPayloadTypeStructure(META.handle_input!, decodedTypes) as TypeStructure;
 
@@ -386,15 +366,7 @@ describe('send message page tests', () => {
     await waitFor(() => expect(gasLimitField).toHaveValue('2,400,000'));
 
     expect(calculateGasMock).toBeCalledTimes(1);
-    expect(calculateGasMock).toBeCalledWith(
-      'handle',
-      TEST_API,
-      formValues,
-      expect.any(Object),
-      META,
-      null,
-      PROGRAM_ID_1
-    );
+    expect(calculateGasMock).toBeCalledWith('handle', formValues, null, META, PROGRAM_ID_1);
 
     // authorized submit
 
@@ -424,10 +396,15 @@ describe('send message page tests', () => {
 
     // checking if fields are present in a form
 
+    const messageIdText = screen.getByText('Message Id');
+    const messageIdValue = screen.getByText(MESSAGE_ID_2);
+
+    expect(messageIdText).toBeInTheDocument();
+    expect(messageIdValue).toBeInTheDocument();
+
     const valueField = screen.getByLabelText('Value');
     const payloadField = screen.getByLabelText('Payload');
     const gasLimitField = screen.getByLabelText('Gas limit');
-    const messageIdField = screen.getByLabelText('Message Id');
     const payloadTypeField = screen.getByLabelText('Payload type');
     const payloadTypeSwitch = screen.getByLabelText('Enter type');
 
@@ -437,7 +414,6 @@ describe('send message page tests', () => {
     expect(valueField).toBeInTheDocument();
     expect(payloadField).toBeInTheDocument();
     expect(gasLimitField).toBeInTheDocument();
-    expect(messageIdField).toBeInTheDocument();
 
     expect(payloadTypeField).toBeDisabled();
     expect(payloadTypeField).toBeInTheDocument();
@@ -480,15 +456,7 @@ describe('send message page tests', () => {
     await waitFor(() => expect(gasLimitField).toHaveValue('2,400,000'));
 
     expect(calculateGasMock).toBeCalledTimes(1);
-    expect(calculateGasMock).toBeCalledWith(
-      'reply',
-      TEST_API,
-      formValues,
-      expect.any(Object),
-      undefined,
-      null,
-      MESSAGE_ID_2
-    );
+    expect(calculateGasMock).toBeCalledWith('reply', formValues, null, undefined, MESSAGE_ID_2);
 
     // authorized submit
 
@@ -518,9 +486,14 @@ describe('send message page tests', () => {
 
     // checking if fields are present in a form
 
+    const messageIdText = screen.getByText('Message Id');
+    const messageIdValue = screen.getByText(MESSAGE_ID_1);
+
+    expect(messageIdText).toBeInTheDocument();
+    expect(messageIdValue).toBeInTheDocument();
+
     const valueField = screen.getByLabelText('Value');
     const gasLimitField = screen.getByLabelText('Gas limit');
-    const messageIdField = screen.getByLabelText('Message Id');
     const payloadTypeField = screen.queryByLabelText('Payload type');
     const payloadTypeSwitch = screen.queryByLabelText('Enter type');
 
@@ -529,7 +502,6 @@ describe('send message page tests', () => {
 
     expect(valueField).toBeInTheDocument();
     expect(gasLimitField).toBeInTheDocument();
-    expect(messageIdField).toBeInTheDocument();
 
     expect(payloadTypeField).not.toBeInTheDocument();
     expect(payloadTypeSwitch).not.toBeInTheDocument();
@@ -562,15 +534,7 @@ describe('send message page tests', () => {
     await waitFor(() => expect(gasLimitField).toHaveValue('2,400,000'));
 
     expect(calculateGasMock).toBeCalledTimes(1);
-    expect(calculateGasMock).toBeCalledWith(
-      'reply',
-      TEST_API,
-      formValues,
-      expect.any(Object),
-      REPLY_META,
-      null,
-      MESSAGE_ID_1
-    );
+    expect(calculateGasMock).toBeCalledWith('reply', formValues, null, REPLY_META, MESSAGE_ID_1);
 
     // authorized submit
 
