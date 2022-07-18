@@ -19,7 +19,7 @@ const Message = () => {
   const [message, setMessage] = useState<MessageModel>();
   const [messagePayload, setMessagePayload] = useState('');
 
-  const [program, meta] = useProgram(message?.source);
+  const [program, metadata] = useProgram(message?.source);
 
   useEffect(() => {
     getMessage(messageId).then(({ result }) => setMessage(result));
@@ -31,10 +31,10 @@ const Message = () => {
       return;
     }
 
-    const payload = meta && !message.exitCode ? getDecodedMessagePayload(meta, message) : message.payload;
+    const payload = metadata && !message.exitCode ? getDecodedMessagePayload(metadata, message) : message.payload;
 
     setMessagePayload(getPreformattedText(payload));
-  }, [program, message, meta]);
+  }, [program, message, metadata]);
 
   return (
     <div className="wrapper">

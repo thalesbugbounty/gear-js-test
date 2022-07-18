@@ -82,7 +82,7 @@ const ProgramSwitch = () => {
       <div className={styles.switchWrapper}>
         <div className={styles.switchButtons}>
           <NavLink to={routes.main} className={styles.switchButton}>
-            Upload program
+            Main
           </NavLink>
           <NavLink to={routes.uploadedPrograms} className={styles.switchButton}>
             My programs
